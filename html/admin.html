@@ -28,13 +28,13 @@
             <a href="home.html" class="nav-link">Notes</a>
           </li>
           <li class="nav-item">
-            <a href="account.html" class="nav-link">Account</a>
-          </li>
-          <li class="nav-item">
             <a id="admin-page-link" href="admin.html" class="nav-link active" style="display: none;">Configuration</a>
           </li>
         </ul>
-        <button id="log-out-button" type="button" class="btn btn-warning" onclick="logout()">Log Out</button>
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <a href="account.html" class="nav-link">Settings</a>
+          <button id="log-out-button" type="button" class="btn btn-warning" onclick="logout()">Log Out</button>
+        </ul>
       </div>
     </div>
   </nav>
@@ -47,77 +47,77 @@
 
           <div class="input-group mb-3">
             <span class="input-group-text">Length</span>
-            <input id="length-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            <input id="length-req-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Lowercase Letters</span>
-            <input id="lower-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            <input id="lower-req-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Uppercase Letters</span>
-            <input id="upper-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            <input id="upper-req-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Numeric Digits</span>
-            <input id="number-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            <input id="number-req-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Special Characters</span>
-            <input id="special-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            <input id="special-req-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Extended Special Characters</span>
-            <input id="extended-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            <input id="extended-req-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Unique Characters</span>
-            <input id="unique-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            <input id="unique-req-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Prior Password Similarity</span>
-            <input id="similarity-req-input" type="number" min="0" max="100" class="form-control" onchange="updateSettings()">
+            <input id="similarity-req-input" type="number" min="0" max="100" class="form-control" onchange="updateConfiguration()">
             <span class="input-group-text">%</span>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Prohibit common passwords</span>
             <div class="input-group-text">
-              <input id="prohibitCommon-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateSettings()">
+              <input id="prohibitCommon-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateConfiguration()">
             </div>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Prohibit user's first name</span>
             <div class="input-group-text">
-              <input id="prohibitFirstName-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateSettings()">
+              <input id="prohibitFirstName-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateConfiguration()">
             </div>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Prohibit user's last name</span>
             <div class="input-group-text">
-              <input id="prohibitLastName-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateSettings()">
+              <input id="prohibitLastName-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateConfiguration()">
             </div>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Prohibit user's username</span>
             <div class="input-group-text">
-              <input id="prohibitUserName-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateSettings()">
+              <input id="prohibitUserName-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateConfiguration()">
             </div>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Prohibit user's email</span>
             <div class="input-group-text">
-              <input id="prohibitEmail-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateSettings()">
+              <input id="prohibitEmail-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateConfiguration()">
             </div>
           </div>
         </div>
@@ -129,35 +129,35 @@
 
           <div class="input-group mb-3">
             <span class="input-group-text">Lowercase Letter</span>
-            <input id="lower-score-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            <input id="lower-score-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Uppercase Letter</span>
-            <input id="upper-score-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            <input id="upper-score-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Numeric Digit</span>
-            <input id="number-score-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            <input id="number-score-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Special Charater</span>
-            <input id="special-score-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            <input id="special-score-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Extended Charater</span>
-            <input id="extended-score-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            <input id="extended-score-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">Unique Character</span>
-            <input id="unique-score-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            <input id="unique-score-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
           </div>
         </div>
-        <button type="button" class="btn btn-danger mb-3" onclick="resetPasswordSettings()">Reset to Default Password Settings</button>
+        <button type="button" class="btn btn-danger mb-3" onclick="resetPasswordConfiguration()">Reset to Default Password Configuration</button>
       </div>
     </div>
   
@@ -171,22 +171,22 @@
             
             <div class="input-group mb-3">
               <span class="input-group-text bg-success">Very Strong</span>
-              <input id="veryhigh-strength-threshold-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+              <input id="veryhigh-strength-threshold-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text bg-success-subtle">Strong</span>
-              <input id="high-strength-threshold-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+              <input id="high-strength-threshold-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text bg-warning">Medium</span>
-              <input id="medium-strength-threshold-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+              <input id="medium-strength-threshold-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text bg-danger-subtle">Weak</span>
-              <input id="low-strength-threshold-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+              <input id="low-strength-threshold-input" type="number" min="0" class="form-control" onchange="updateConfiguration()">
             </div>
 
             <div class="input-group mb-3">
@@ -196,7 +196,7 @@
 
             <div class="input-group mb-3">
               <label class="input-group-text" for="min-strength-group-select">Minimum Strength</label>
-              <select class="form-select" id="min-strength-group-select" onchange="updateSettings()">
+              <select class="form-select" id="min-strength-group-select" onchange="updateConfiguration()">
                 <option value="none">None</option>
                 <option value="veryhigh">Very Strong</option>
                 <option value="high">Strong</option>

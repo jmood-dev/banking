@@ -71,7 +71,7 @@ let defaultData = {
       notes: []
     }
   }, 
-  settings: {
+  configuration: {
     requirements: {
       length: 8,
       lower: 1,
@@ -176,8 +176,8 @@ function initData() {
 
   let passwordChecksList = document.getElementById("password-checks-list")
   if (passwordChecksList) {
-    for (let reqKey of Object.keys(appData.settings.requirements)) {
-      let req = appData.settings.requirements[reqKey]
+    for (let reqKey of Object.keys(appData.configuration.requirements)) {
+      let req = appData.configuration.requirements[reqKey]
       if (!req) {
         let checkContainer = document.getElementById(reqKey + "-check-container")
         if (checkContainer) {
@@ -191,11 +191,11 @@ function initData() {
         }
       }
     }
-    if (!appData.settings.requirements.similarity) {
+    if (!appData.configuration.requirements.similarity) {
       let checkContainer = document.getElementById("easy-check-container")
       checkContainer.style.setProperty('display', 'none', 'important')
     }
-    if (!appData.settings.requirements.prohibitCommon) {
+    if (!appData.configuration.requirements.prohibitCommon) {
       let checkContainer = document.getElementById("previous-check-container")
       checkContainer.style.setProperty('display', 'none', 'important')
     }
@@ -393,39 +393,39 @@ function initAdmin() {
     }
   }
 
-  for (let weightKey in appData.settings.scoreWeights) {
+  for (let weightKey in appData.configuration.scoreWeights) {
     let weightInput = document.getElementById(weightKey + "-score-input")
-    weightInput.value = appData.settings.scoreWeights[weightKey]
+    weightInput.value = appData.configuration.scoreWeights[weightKey]
   }
 
-  for (let reqKey of Object.keys(appData.settings.requirements)) {
+  for (let reqKey of Object.keys(appData.configuration.requirements)) {
     if (reqKey == 'prohibitCommon') {
-      document.getElementById("prohibitCommon-req-checkbox").checked = appData.settings.requirements[reqKey]
+      document.getElementById("prohibitCommon-req-checkbox").checked = appData.configuration.requirements[reqKey]
     } else if (reqKey == 'prohibitFirstName') {
-      document.getElementById("prohibitFirstName-req-checkbox").checked = appData.settings.requirements[reqKey]
+      document.getElementById("prohibitFirstName-req-checkbox").checked = appData.configuration.requirements[reqKey]
     } else if (reqKey == 'prohibitLastName') {
-      document.getElementById("prohibitLastName-req-checkbox").checked = appData.settings.requirements[reqKey]
+      document.getElementById("prohibitLastName-req-checkbox").checked = appData.configuration.requirements[reqKey]
     } else if (reqKey == 'prohibitUserName') {
-      document.getElementById("prohibitUserName-req-checkbox").checked = appData.settings.requirements[reqKey]
+      document.getElementById("prohibitUserName-req-checkbox").checked = appData.configuration.requirements[reqKey]
     } else if (reqKey == 'prohibitEmail') {
-      document.getElementById("prohibitEmail-req-checkbox").checked = appData.settings.requirements[reqKey]
+      document.getElementById("prohibitEmail-req-checkbox").checked = appData.configuration.requirements[reqKey]
     } else if (reqKey == 'strength') {
-      document.getElementById("min-strength-group-select").value = appData.settings.requirements[reqKey] ? appData.settings.requirements[reqKey] : 'none'
+      document.getElementById("min-strength-group-select").value = appData.configuration.requirements[reqKey] ? appData.configuration.requirements[reqKey] : 'none'
       setMinStrengthSelectColor()
     } else {
-      document.getElementById(reqKey + "-req-input").value = appData.settings.requirements[reqKey]
+      document.getElementById(reqKey + "-req-input").value = appData.configuration.requirements[reqKey]
     }
   }
 
-  for (let i = 0; i < appData.settings.strengths.length; i++) {
-    let strengthThresholdInput = document.getElementById(appData.settings.strengths[i].id + "-strength-threshold-input")
-    strengthThresholdInput.value = appData.settings.strengths[i].threshold
+  for (let i = 0; i < appData.configuration.strengths.length; i++) {
+    let strengthThresholdInput = document.getElementById(appData.configuration.strengths[i].id + "-strength-threshold-input")
+    strengthThresholdInput.value = appData.configuration.strengths[i].threshold
     
-    if (i < appData.settings.strengths.length - 1) {
-      strengthThresholdInput.min = appData.settings.strengths[i+1].threshold + 1
+    if (i < appData.configuration.strengths.length - 1) {
+      strengthThresholdInput.min = appData.configuration.strengths[i+1].threshold + 1
     }
     if (i > 0) {
-      strengthThresholdInput.max = appData.settings.strengths[i-1].threshold - 1
+      strengthThresholdInput.max = appData.configuration.strengths[i-1].threshold - 1
     }
   }
 }
@@ -440,13 +440,13 @@ function deleteUser(userName) {
   }
 }
 
-function updateSettings() {
-  for (let reqKey of Object.keys(appData.settings.requirements)) {
+function updateConfiguration() {
+  for (let reqKey of Object.keys(appData.configuration.requirements)) {
     if (reqKey == 'prohibitCommon' || reqKey == 'prohibitFirstName' || reqKey == 'prohibitLastName' || reqKey == 'prohibitUserName' || reqKey == 'prohibitEmail') {
       let reqCheckbox = document.getElementById(reqKey + "-req-checkbox")
-      appData.settings.requirements[reqKey] = reqCheckbox.checked
+      appData.configuration.requirements[reqKey] = reqCheckbox.checked
     } else if (reqKey == 'strength') {
-      appData.settings.requirements[reqKey] = document.getElementById("min-strength-group-select").value == 'none' ? null : document.getElementById("min-strength-group-select").value
+      appData.configuration.requirements[reqKey] = document.getElementById("min-strength-group-select").value == 'none' ? null : document.getElementById("min-strength-group-select").value
     } else {
       let reqInput = document.getElementById(reqKey + "-req-input")
 
@@ -457,14 +457,14 @@ function updateSettings() {
         reqInput.value = reqInput.max
       }
       if (reqInput.value == "") {
-        reqInput.value = appData.settings.requirements[reqKey]
+        reqInput.value = appData.configuration.requirements[reqKey]
       }
 
-      appData.settings.requirements[reqKey] = Number(reqInput.value)
+      appData.configuration.requirements[reqKey] = Number(reqInput.value)
     }
   }
 
-  for (let weightKey of Object.keys(appData.settings.scoreWeights)) {
+  for (let weightKey of Object.keys(appData.configuration.scoreWeights)) {
     weightInput = document.getElementById(weightKey + "-score-input")
 
     //validate requirements input
@@ -472,14 +472,14 @@ function updateSettings() {
       weightInput.value = weightInput.min
     }
     if (weightInput.value == "") {
-      weightInput.value = appData.settings.scoreWeights[weightKey]
+      weightInput.value = appData.configuration.scoreWeights[weightKey]
     }
 
-    appData.settings.scoreWeights[weightKey] = Number(weightInput.value)
+    appData.configuration.scoreWeights[weightKey] = Number(weightInput.value)
   }
 
-  for (let i = 0; i < appData.settings.strengths.length; i++) {
-    let strengthThresholdInput = document.getElementById(appData.settings.strengths[i].id + "-strength-threshold-input")
+  for (let i = 0; i < appData.configuration.strengths.length; i++) {
+    let strengthThresholdInput = document.getElementById(appData.configuration.strengths[i].id + "-strength-threshold-input")
     
     if (strengthThresholdInput.min && Number(strengthThresholdInput.value) < Number(strengthThresholdInput.min)) {
       strengthThresholdInput.value = strengthThresholdInput.min
@@ -487,20 +487,20 @@ function updateSettings() {
       strengthThresholdInput.value = strengthThresholdInput.max
     }
     if (strengthThresholdInput.value == "") {
-      strengthThresholdInput.value = appData.settings.strengths.length[i]
+      strengthThresholdInput.value = appData.configuration.strengths.length[i]
     }
     
-    appData.settings.strengths[i].threshold = Number(strengthThresholdInput.value)
+    appData.configuration.strengths[i].threshold = Number(strengthThresholdInput.value)
   }
 
-  for (let i = 0; i < appData.settings.strengths.length; i++) {
-    let strengthThresholdInput = document.getElementById(appData.settings.strengths[i].id + "-strength-threshold-input")
+  for (let i = 0; i < appData.configuration.strengths.length; i++) {
+    let strengthThresholdInput = document.getElementById(appData.configuration.strengths[i].id + "-strength-threshold-input")
     
-    if (i < appData.settings.strengths.length - 1) {
-      strengthThresholdInput.min = appData.settings.strengths[i+1].threshold + 1
+    if (i < appData.configuration.strengths.length - 1) {
+      strengthThresholdInput.min = appData.configuration.strengths[i+1].threshold + 1
     }
     if (i > 0) {
-      strengthThresholdInput.max = appData.settings.strengths[i-1].threshold - 1
+      strengthThresholdInput.max = appData.configuration.strengths[i-1].threshold - 1
     }
   }
 
@@ -511,17 +511,17 @@ function updateSettings() {
 function setMinStrengthSelectColor() {
   let minStrengthSelect = document.getElementById("min-strength-group-select")
 
-  for (let strength of appData.settings.strengths) {
+  for (let strength of appData.configuration.strengths) {
     minStrengthSelect.classList.remove(strength.bgColorClass)
-    if (strength.id == appData.settings.requirements.strength) {
+    if (strength.id == appData.configuration.requirements.strength) {
       minStrengthSelect.classList.add(strength.bgColorClass)
     }
   }
   
 }
 
-function resetPasswordSettings() {
-  appData.settings = JSON.parse(JSON.stringify(defaultData.settings))
+function resetPasswordConfiguration() {
+  appData.configuration = JSON.parse(JSON.stringify(defaultData.configuration))
   saveData()
   initAdmin()
 }

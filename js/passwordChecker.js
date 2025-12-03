@@ -64,9 +64,9 @@ function checkPasswordInput() {
   }
   scoreComponents.unique = uniqueChars.length
 
-  let requirementsMet = pwd.length >= appData.settings.requirements.length
+  let requirementsMet = pwd.length >= appData.configuration.requirements.length
   for (let reqKey of Object.keys(reqComponents)) {
-    if (reqComponents[reqKey] < appData.settings.requirements[reqKey]) {
+    if (reqComponents[reqKey] < appData.configuration.requirements[reqKey]) {
       requirementsMet = false
     }
   }
@@ -87,7 +87,7 @@ function checkPasswordInput() {
 
   let isSimilarToPreviousPassword = false
   if (appData.loggedInUser != null) {
-    let similarityThreshold = appData.settings.requirements.similarity / 100
+    let similarityThreshold = appData.configuration.requirements.similarity / 100
     for (let savedPassword of appData.loggedInUser.previousPasswords) {
       let similarSubstringLength = Math.max(Math.floor(savedPassword.length * similarityThreshold), 2)
       for (let i = 0; i < savedPassword.length - similarSubstringLength + 1; i++) {
@@ -101,13 +101,13 @@ function checkPasswordInput() {
 
   let score = 0
   for (let key of Object.keys(scoreComponents)) {
-    score += scoreComponents[key] * appData.settings.scoreWeights[key]
+    score += scoreComponents[key] * appData.configuration.scoreWeights[key]
   }
   score *= passwordForScoring.length
 
   let strengthMin = null
-  for (let strength of appData.settings.strengths) {
-    if (strength.id == appData.settings.requirements.strength) {
+  for (let strength of appData.configuration.strengths) {
+    if (strength.id == appData.configuration.requirements.strength) {
       strengthMin = strength
       break
     }
@@ -116,11 +116,11 @@ function checkPasswordInput() {
 
   let passwordsMatch = checkPasswordsMatch()
   requirementsMet = requirementsMet && passwordsMatch && !hasControlChar && !isSimilarToPreviousPassword &&
-                    (!appData.settings.requirements.prohibitCommon || !isEasyPassword) && 
-                    (!appData.settings.requirements.prohibitFirstName || !hasFirstName) && 
-                    (!appData.settings.requirements.prohibitLastName || !hasLastName) && 
-                    (!appData.settings.requirements.prohibitUserName || !hasUserName) && 
-                    (!appData.settings.requirements.prohibitEmail || !hasUserEamil) && minScoreReached
+                    (!appData.configuration.requirements.prohibitCommon || !isEasyPassword) && 
+                    (!appData.configuration.requirements.prohibitFirstName || !hasFirstName) && 
+                    (!appData.configuration.requirements.prohibitLastName || !hasLastName) && 
+                    (!appData.configuration.requirements.prohibitUserName || !hasUserName) && 
+                    (!appData.configuration.requirements.prohibitEmail || !hasUserEamil) && minScoreReached
 
   let saveButton = document.getElementById("sign-up-button")
   if (saveButton == null) {
@@ -235,14 +235,14 @@ function createChecksDisplay(passwordLength, reqComponents, isSimilarToPreviousP
   passwordCheckResultsContainer.replaceChildren()
   for (let key of Object.keys(REQ_INFO)) {
 
-    if (appData.settings.requirements[key] && !(window.location.href.includes("landing") && key == 'similarity')) {
+    if (appData.configuration.requirements[key] && !(window.location.href.includes("landing") && key == 'similarity')) {
       let text = REQ_INFO[key].text
       if (REQ_INFO[key].addNum) {
-        text += appData.settings.requirements[key]
+        text += appData.configuration.requirements[key]
       } else if (key == 'strength') {
-        let strengthMinId = appData.settings.requirements.strength
+        let strengthMinId = appData.configuration.requirements.strength
         let strengthMin = null
-        for (let strength of appData.settings.strengths) {
+        for (let strength of appData.configuration.strengths) {
           if (strength.id == strengthMinId) {
             strengthMin = strength
             break
@@ -250,7 +250,7 @@ function createChecksDisplay(passwordLength, reqComponents, isSimilarToPreviousP
         }
         text += ` <span class='${strengthMin.textColorClass}'>${strengthMin.name}</span>`
       }
-      if (key in reqComponents && reqComponents[key] >= appData.settings.requirements[key] ||
+      if (key in reqComponents && reqComponents[key] >= appData.configuration.requirements[key] ||
         key == 'similarity' && !isSimilarToPreviousPassword || key == 'prohibitCommon' && !isEasyPassword ||
         key == 'prohibitFirstName' && !hasFirstName || key == 'prohibitLastName' && !hasLastName ||
         key == 'prohibitUserName' && !hasUserName || key == 'prohibitEmail' && !hasUserEamil ||
@@ -275,9 +275,9 @@ function createChecksDisplay(passwordLength, reqComponents, isSimilarToPreviousP
 
   let passwordStrengthOutput = document.getElementById("password-strength-output-template").content.firstElementChild.cloneNode(true)
   let passwordStrengthNameOutput = passwordStrengthOutput.querySelector(".strength-name-output")
-  let numBoxesToColor = appData.settings.strengths.length
-  for (let strengthKey of Object.keys(appData.settings.strengths)) {
-    let strength = appData.settings.strengths[strengthKey]
+  let numBoxesToColor = appData.configuration.strengths.length
+  for (let strengthKey of Object.keys(appData.configuration.strengths)) {
+    let strength = appData.configuration.strengths[strengthKey]
     if (score >= strength.threshold) {
       passwordStrengthNameOutput.innerHTML = `${strength.name}`
       let boxesToColor = passwordStrengthOutput.querySelectorAll(".strength-box-output")
@@ -286,7 +286,7 @@ function createChecksDisplay(passwordLength, reqComponents, isSimilarToPreviousP
           boxesToColor[i].classList.add(strength.bgColorClass)
         }
       }
-      passwordStrengthNameOutput.classList.add(appData.settings.strengths[strengthKey].textColorClass)
+      passwordStrengthNameOutput.classList.add(appData.configuration.strengths[strengthKey].textColorClass)
       break
     } else {
       numBoxesToColor--

@@ -25,7 +25,7 @@
         
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a href="home.html" class="nav-link active">Notes</a>
+            <a href="home.html" class="nav-link active">Banking</a>
           </li>
           <li class="nav-item">
             <a id="admin-page-link" href="admin.html" class="nav-link" style="display: none;">Configuration</a>
@@ -36,6 +36,19 @@
           <button id="log-out-button" type="button" class="btn btn-warning" onclick="logout()">Log Out</button>
         </ul>
       </div>
+    </div>
+  </nav>
+
+  <nav class="navbar navbar-expand-sm bg-body-tertiary sticky-top" data-bs-theme="light">
+    <div class="container-fluid">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a href="#" class="nav-link active">Accounts</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">Transfers</a>
+        </li>
+      </ul>
     </div>
   </nav>
 
@@ -61,21 +74,21 @@
       </div>
       <div class="col">
         <div class="floating-box">
-          <div id="note-edit-container" style="display: none;">
-            <h1>Edit Note</h1>
+          <div id="open-account-container" class="mb-2">
+            <h1>New Account Details</h1>
+            
+            <select id="open-account-type" class="form-select mb-2" aria-label="Small select example">
+              <option value="select" selected>Select Type</option>
+              <option value="Savings">Savings</option>
+              <option value="Checking">Checking</option>
+            </select>
             
             <div class="input-group mb-2">
-              <input id="note-name-input" placeholder="Note name" type="text" class="form-control" onchange="updateNote()">
+              <input id="open-account-name-input" placeholder="Account Nickname" type="text" class="form-control">
             </div>
 
-            <div class="form-floating mb-2">
-              <textarea class="form-control" placeholder="Enter note here" id="note-content-input" style="height: 100px" onchange="updateNote()"></textarea>
-              <label for="note-content-input">Note Text</label>
-            </div>
-
-            <button id="delete-note-button" type="button" class="btn btn-danger mb-4" onclick="deleteCurrentNote()">Delete Note</button>
           </div>
-          <button id="new-note-button" type="button" class="btn btn-primary" onclick="createNewNote()">New Note</button>
+          <button id="new-note-button" type="button" class="btn btn-primary" onclick="openAccount()">Open Account</button>
         </div>
       </div>
     </div>

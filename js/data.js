@@ -68,7 +68,19 @@ let defaultData = {
         password: 'admin'
       },
       previousPasswords: ['admin'],
-      notes: []
+      accounts: [
+        {
+          type: "Savings",
+          nickname: "Savings",
+          balance: 0,
+          transactions: []
+        }
+      ],
+      requests: {
+        deposits: [],
+        incomingExternals: [],
+        internalTranfers: []
+      }
     }
   }, 
   configuration: {
@@ -561,20 +573,19 @@ function updateNote() {
   initHome()
 }
 
-function createNewNote() {
-  let newNote = {
-    name: '',
-    content: ''
+function openAccount() {
+  
+  let newAccount = {
+    type: document.getElementById('open-account-type').value,
+    nickname: document.getElementById('open-account-name-input').value,
+    balance: 0,
+    transactions: []
   }
   
-  appData.currentNoteIndex = appData.loggedInUser.notes.length
-  
-  document.getElementById("note-edit-container").style.display = 'block'
+  document.getElementById('open-account-type').value = 'select'
+  document.getElementById('open-account-name-input').value = ''
 
-  document.getElementById("note-name-input").value = ''
-  document.getElementById("note-content-input").value = ''
-
-  appData.loggedInUser.notes.push(newNote)
+  appData.loggedInUser.accounts.push(newAccount)
 
   saveData()
 }

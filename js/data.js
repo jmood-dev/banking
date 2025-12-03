@@ -240,7 +240,7 @@ function loggedInOutRedirect() {
       window.location.href = "home.html"
     }
   } else {
-    if (window.location.href.includes("home") || window.location.href.includes("account") || window.location.href.includes("admin")) {
+    if (window.location.href.includes("home") || window.location.href.includes("settings") || window.location.href.includes("admin")) {
       window.location.href = "landing.html"
     }
   }

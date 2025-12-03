@@ -59,15 +59,18 @@
     <div class="row">
       <div class="col">
         <div class="floating-box">
-          <h1>Notes</h1>
+          <h1>Accounts</h1>
+          <h4 id="accounts-total-balance">Total balance: </h4>
 
-          <div id="note-list-container">
-            <ul id="note-list" class="note-list"></ul>
+          <div id="account-list-container">
+            <ul id="account-list" class="account-list"></ul>
           </div>
 
-          <template id="note-list-item-template">
-            <li class="note-list-item">
-              <a class="note-name link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="#"></a>
+          <template id="account-list-item-template">
+            <li class="account-list-item">
+              <a class="account-name link-offset-2 link-offset-1-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="#"></a>
+              <div class="account-type"></div>
+              <div class="account-balance"></div>
             </li>
           </template>
         </div>

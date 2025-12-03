@@ -70,11 +70,23 @@ body {
   text-shadow: 1px 1px #262626;
 }
 
-.user-list-item, .note-list-item {
+.account-list-item {
+  background-color: beige;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.user-list-item, .account-list-item {
   margin-left: 0;
   list-style: none;
 }
 
-.user-list-container, .note-list {
+.account-list {
+  padding-inline-start: 0;
+}
+
+.user-list-container, .account-list {
   text-align: left;
 }

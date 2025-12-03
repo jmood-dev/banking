@@ -539,15 +539,19 @@ function resetPasswordConfiguration() {
 }
 
 function initHome() {
-  let noteList = document.getElementById("note-list")
-  noteList.replaceChildren()
-  for (let i = 0; i < appData.loggedInUser.notes.length; i++) {
-    let note = appData.loggedInUser.notes[i]
-    let listItem = document.getElementById("note-list-item-template").content.firstElementChild.cloneNode(true)
-    listItem.querySelector(".note-name").innerHTML = `${note.name != '' ? note.name : '(Untitled Note)'}`
-    listItem.querySelector(".note-name").onclick = () => {loadNote(i)}
-    noteList.append(listItem)
+  let totalBalance = 0
+  let accountList = document.getElementById("account-list")
+  accountList.replaceChildren()
+  for (let i = 0; i < appData.loggedInUser.accounts.length; i++) {
+    let account = appData.loggedInUser.accounts[i]
+    let listItem = document.getElementById("account-list-item-template").content.firstElementChild.cloneNode(true)
+    listItem.querySelector(".account-name").innerHTML = account.nickname
+    //listItem.querySelector(".account-name").onclick = () => {loadAccount(i)}
+    listItem.querySelector(".account-type").innerHTML = "Type: " + account.type
+    listItem.querySelector(".account-balance").innerHTML = "Balance: " + formatCurrency(account.balance)
+    accountList.append(listItem)
   }
+  document.getElementById('accounts-total-balance').innerText = "Total balance: " + formatCurrency(totalBalance)
 }
 
 function loadNote(index) {
@@ -599,4 +603,12 @@ function deleteCurrentNote() {
 
   document.getElementById("note-name-input").value = ''
   document.getElementById("note-content-input").value = ''
+}
+
+function formatCurrency(amount) {
+  const options = {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  };
+  return "$" + Number(amount).toLocaleString('en-US', options);
 }

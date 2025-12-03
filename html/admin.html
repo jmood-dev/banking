@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notewords - Configuration</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../assets/notes.png">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-sm bg-body-tertiary sticky-top" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="home.html">
+        <img src="../assets/notes.png" alt="NoteWords" height="48">
+        NoteWords
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a href="home.html" class="nav-link">Notes</a>
+          </li>
+          <li class="nav-item">
+            <a href="account.html" class="nav-link">Account</a>
+          </li>
+          <li class="nav-item">
+            <a id="admin-page-link" href="admin.html" class="nav-link active" style="display: none;">Configuration</a>
+          </li>
+        </ul>
+        <button id="log-out-button" type="button" class="btn btn-warning" onclick="logout()">Log Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container text-center" style="margin-top: 10vh;">
+    <div class="row">
+      <div class="col">
+        <div class="floating-box">
+          <h1>Password Requirements</h1>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Length</span>
+            <input id="length-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Lowercase Letters</span>
+            <input id="lower-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Uppercase Letters</span>
+            <input id="upper-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Numeric Digits</span>
+            <input id="number-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Special Characters</span>
+            <input id="special-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Extended Special Characters</span>
+            <input id="extended-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Unique Characters</span>
+            <input id="unique-req-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Prior Password Similarity</span>
+            <input id="similarity-req-input" type="number" min="0" max="100" class="form-control" onchange="updateSettings()">
+            <span class="input-group-text">%</span>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Prohibit common passwords</span>
+            <div class="input-group-text">
+              <input id="prohibitCommon-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateSettings()">
+            </div>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Prohibit user's first name</span>
+            <div class="input-group-text">
+              <input id="prohibitFirstName-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateSettings()">
+            </div>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Prohibit user's last name</span>
+            <div class="input-group-text">
+              <input id="prohibitLastName-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateSettings()">
+            </div>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Prohibit user's username</span>
+            <div class="input-group-text">
+              <input id="prohibitUserName-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateSettings()">
+            </div>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Prohibit user's email</span>
+            <div class="input-group-text">
+              <input id="prohibitEmail-req-checkbox" class="form-check-input mt-0" type="checkbox" onchange="updateSettings()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="floating-box">
+          <h1>Password Strength: Points For Each</h1>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Lowercase Letter</span>
+            <input id="lower-score-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Uppercase Letter</span>
+            <input id="upper-score-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Numeric Digit</span>
+            <input id="number-score-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Special Charater</span>
+            <input id="special-score-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Extended Charater</span>
+            <input id="extended-score-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Unique Character</span>
+            <input id="unique-score-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+          </div>
+        </div>
+        <button type="button" class="btn btn-danger mb-3" onclick="resetPasswordSettings()">Reset to Default Password Settings</button>
+      </div>
+    </div>
+  
+
+    <div class="row">
+      <div class="col">
+        <div class="floating-box">
+          <h1>Strength Thresholds</h1>
+
+          <div id="strength-threshold">
+            
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-success">Very Strong</span>
+              <input id="veryhigh-strength-threshold-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-success-subtle">Strong</span>
+              <input id="high-strength-threshold-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-warning">Medium</span>
+              <input id="medium-strength-threshold-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-danger-subtle">Weak</span>
+              <input id="low-strength-threshold-input" type="number" min="0" class="form-control" onchange="updateSettings()">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-danger">Very Weak</span>
+              <input id="verylow-strength-threshold-input" type="number" min="0" class="form-control" disabled="true">
+            </div>
+
+            <div class="input-group mb-3">
+              <label class="input-group-text" for="min-strength-group-select">Minimum Strength</label>
+              <select class="form-select" id="min-strength-group-select" onchange="updateSettings()">
+                <option value="none">None</option>
+                <option value="veryhigh">Very Strong</option>
+                <option value="high">Strong</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+                <option value="verylow">Very Low</option>
+              </select>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="floating-box">
+          <h1>Users</h1>
+
+          <div id="user-list-container" class="user-list-container">
+            <ul id="user-list"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <template id="user-list-item-template">
+    <li class="user-list-item mb-2">
+      <span class="username-list-item"></span>
+      <button type="button" class="btn btn-danger delete-user-button">Delete</button>
+    </li>
+  </template>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
+  <script src="../js/data.js"></script>
+  <script src="../assets/commonPasswords.js"></script>
+  <script src="../js/passwordChecker.js"></script>
+
+  <script>
+    initData()
+    loggedInOutRedirect()
+    initAdmin()
+  </script>
+</body>
+</html>

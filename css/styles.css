@@ -1,0 +1,80 @@
+body {
+  background-image: url(../assets/notebook-pen.jpeg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: black;
+  background-attachment: fixed;
+}
+
+.floating-box {
+  background-color: rgb(255, 218, 185, 0.7);
+  border-radius: 5px;
+  margin-bottom: 24px;
+  padding: 5px;
+  min-width: 270px;
+}
+
+.invisible-floating-box {
+  visibility: hidden;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.password-checker-floating-output {
+  @media screen and (width >= 768px) {
+    position: absolute;
+  }
+  right: 105%;
+  background-color: white;
+  min-width: 350px;
+  top: 0;
+  border-radius: 5px !important;
+  padding: 5px;
+  text-align: left;
+}
+
+.round-left {
+  border-top-left-radius: 5px !important;
+  border-bottom-left-radius: 5px !important;
+}
+
+.strength-name-output {
+  width: 26%;
+}
+
+.strength-box-output-group {
+  flex-grow: 1;
+  height: 20px;
+}
+
+.strength-box-output {
+  background-color: grey;
+  flex-grow: 1;  
+}
+
+.passwords-dont-match-output {
+  color: #222;
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+.text-success-subtle {
+  color: #d1e7dd;
+  text-shadow: 1px 0px #262626, -1px 0px #262626, 0px 1px #262626, 0px -1px #262626;
+} 
+
+.text-danger-subtle {
+  color: #f8d7da;
+  text-shadow: 1px 1px #262626;
+}
+
+.user-list-item, .note-list-item {
+  margin-left: 0;
+  list-style: none;
+}
+
+.user-list-container, .note-list {
+  text-align: left;
+}

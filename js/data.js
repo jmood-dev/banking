@@ -592,6 +592,7 @@ function openAccount() {
   appData.loggedInUser.accounts.push(newAccount)
 
   saveData()
+  initHome()
 }
 
 function deleteCurrentNote() {

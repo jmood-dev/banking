@@ -70,7 +70,7 @@ body {
   text-shadow: 1px 1px #262626;
 }
 
-.account-list-item {
+.account-list-item, .request-list-item {
   background-color: beige;
   margin-top: 5px;
   margin-bottom: 5px;
@@ -78,15 +78,19 @@ body {
   padding: 5px;
 }
 
-.user-list-item, .account-list-item {
+.user-list-item, .account-list-item, .request-list-item {
   margin-left: 0;
   list-style: none;
 }
 
-.account-list {
+.account-list, .request-list {
   padding-inline-start: 0;
 }
 
 .user-list-container, .account-list {
   text-align: left;
+}
+
+.hidden {
+  display: none;
 }

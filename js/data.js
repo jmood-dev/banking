@@ -70,8 +70,9 @@ let defaultData = {
       previousPasswords: ['admin'],
       accounts: [
         {
+          id: crypto.randomUUID(),
           type: "Savings",
-          nickname: "Savings",
+          nickname: "My Savings",
           balance: 0,
           transactions: []
         }
@@ -252,7 +253,7 @@ function loggedInOutRedirect() {
       window.location.href = "home.html"
     }
   } else {
-    if (window.location.href.includes("home") || window.location.href.includes("settings") || window.location.href.includes("admin")) {
+    if (window.location.href.includes("home") || window.location.href.includes("settings") || window.location.href.includes("admin") || window.location.href.includes("requests") || window.location.href.includes("transfers")) {
       window.location.href = "landing.html"
     }
   }
@@ -330,7 +331,14 @@ function signUpForm() {
   newUser.details.email = emailInput.value
   newUser.details.password = passwordInput.value
   newUser.previousPasswords = [passwordInput.value]
-  newUser.notes = []
+  newUser.accounts = [{
+    id: crypto.randomUUID(),
+    type: "Savings",
+    nickname: "My Savings",
+    balance: 0,
+    transactions: []
+  }]
+  newUser.requests = []
 
   appData.users[usernameInput.value] = newUser
   saveData()
@@ -549,6 +557,7 @@ function initHome() {
     //listItem.querySelector(".account-name").onclick = () => {loadAccount(i)}
     listItem.querySelector(".account-type").innerHTML = "Type: " + account.type
     listItem.querySelector(".account-balance").innerHTML = "Balance: " + formatCurrency(account.balance)
+    totalBalance += account.balance
     accountList.append(listItem)
   }
   document.getElementById('accounts-total-balance').innerText = "Total balance: " + formatCurrency(totalBalance)
@@ -580,6 +589,7 @@ function updateNote() {
 function openAccount() {
   
   let newAccount = {
+    id: crypto.randomUUID(),
     type: document.getElementById('open-account-type').value,
     nickname: document.getElementById('open-account-name-input').value,
     balance: 0,
@@ -612,4 +622,126 @@ function formatCurrency(amount) {
     maximumFractionDigits: 2
   };
   return "$" + Number(amount).toLocaleString('en-US', options);
+}
+
+function updateTransferUI(event) {
+  transferUiContainer = document.getElementById('transfer-ui-container')
+  transferUiContainer.replaceChildren()
+
+  let transferUi = {}
+  if (event.target.value == "Deposit") {
+    transferUi = document.getElementById("deposit-item-template").content.firstElementChild.cloneNode(true)
+    let accountSelect = transferUi.querySelector(".deposit-account-select")
+    for (let account of appData.loggedInUser.accounts) {
+      let option = document.createElement("option")
+      option.value = account.id
+      option.innerText = account.nickname + " (" + formatCurrency(account.balance) + ")"
+      accountSelect.append(option)
+    }
+  } else if (event.target.value == "Internal") {
+    transferUi = document.getElementById("internal-transfer-item-template").content.firstElementChild.cloneNode(true)
+    let sourceAccountSelect = transferUi.querySelector('.transfer-source-select')
+    for (let account of appData.loggedInUser.accounts) {
+      let option = document.createElement("option")
+      option.value = account.id
+      option.innerText = account.nickname + " (" + formatCurrency(account.balance) + ")"
+      sourceAccountSelect.append(option)
+    }
+  } else if (event.target.value == "External") {
+
+  }
+
+  transferUiContainer.append(transferUi)
+}
+
+function requestDeposit() {
+  let newDepositRequest = {
+    user: appData.loggedInUser.details.userName,
+    accountId: document.querySelector('.deposit-account-select').value,
+    amount: document.querySelector('.deposit-amount-input').value
+  }
+  document.querySelector('.deposit-amount-input').value = ''
+  appData.users['admin'].requests.deposits.push(newDepositRequest)
+  saveData()
+}
+
+function transferSourceSelected() {
+  let internalTransferDestinationDiv = document.querySelector(".internal-transfer-destination-div")
+  
+  internalTransferDestinationDiv.querySelector('.transfer-destination-select')
+  let sourceAccountSelect = document.querySelector('.transfer-source-select')
+  let destnationAccountSelect = document.getElementById('transfer-destination-select')
+  destnationAccountSelect.replaceChildren()
+  destnationAccountSelect.append(document.createElement('option'))
+  for (let account of appData.loggedInUser.accounts) {
+    if (sourceAccountSelect.value != account.id) {
+      let option = document.createElement("option")
+      option.value = account.id
+      option.innerText = account.nickname + " (" + formatCurrency(account.balance) + ")"
+      destnationAccountSelect.append(option)
+    }
+  }
+
+  internalTransferDestinationDiv.classList.remove("hidden")
+
+  let internalTransferAmountDiv = document.querySelector('.internal-transfer-amount-div')
+  internalTransferAmountDiv.classList.add("hidden")
+  document.querySelector('.internal-transfer-amount-input').value = ''
+}
+
+function transferDestinationSelected() {
+  let internalTransferAmountDiv = document.querySelector('.internal-transfer-amount-div')
+  internalTransferAmountDiv.classList.remove("hidden")
+}
+
+function requestInternalTransfer() {
+  let sourceAccountSelect = document.getElementById('transfer-source-select')
+  let sourceAccount = appData.loggedInUser.accounts.find(e => e.id == sourceAccountSelect.value)
+  let destnationAccountSelect = document.getElementById('transfer-destination-select')
+  let destnationAccount = appData.loggedInUser.accounts.find(e => e.id == destnationAccountSelect.value)
+
+  let amount = Number(document.querySelector('.internal-transfer-amount-input').value)
+  sourceAccount.balance -= amount
+  destnationAccount.balance += amount
+
+  transferUiContainer = document.getElementById('transfer-ui-container')
+  transferUiContainer.replaceChildren()
+
+  document.getElementById('transfer-type').value = 'select'
+
+  saveData()  
+}
+
+function initRequests() {
+  let requestList = document.getElementById("request-list")
+  requestList.replaceChildren()
+  for (let i = 0; i < appData.loggedInUser.requests.deposits.length; i++) {
+    let request = appData.loggedInUser.requests.deposits[i]
+    let listItem = document.getElementById("request-list-item-template").content.firstElementChild.cloneNode(true)
+    listItem.querySelector(".request-user").innerHTML = "From: " + appData.users[request.user].details.firstName + " " + appData.users[request.user].details.lastName
+    listItem.querySelector(".request-type").innerHTML = "Type: Deposit"
+    listItem.querySelector(".request-amount").innerHTML = "Amount: " + formatCurrency(request.amount)
+    listItem.querySelector(".approve-request-button").onclick = () => {approveRequest('deposits', i)}
+    listItem.querySelector(".decline-request-button").onclick = () => {declineRequest('deposits', i)}
+    requestList.append(listItem)
+  }
+}
+
+function approveRequest(type, index) {
+  let request = appData.loggedInUser.requests[type][index]
+  appData.loggedInUser.requests[type].splice(index, 1)
+  if (type == 'deposits') {
+    let user = appData.users[request.user]
+    let account = user.accounts.find(e => e.id == request.accountId)
+    account.balance += Number(request.amount)
+  }
+  saveData()
+  initRequests()
+}
+
+function declineRequest(type, index) {
+  let request = appData.loggedInUser.requests[type][index]
+  appData.loggedInUser.requests[type].splice(index, 1)
+  saveData()
+  initRequests()
 }

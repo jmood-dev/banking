@@ -43,10 +43,10 @@
     <div class="container-fluid">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a href="home.html" class="nav-link active">Accounts</a>
+          <a href="home.html" class="nav-link">Accounts</a>
         </li>
         <li class="nav-item">
-          <a href="transfers.html" class="nav-link">Transfers</a>
+          <a href="transfers.html" class="nav-link active">Transfers</a>
         </li>
         <li class="nav-item">
           <a href="requests.html" class="nav-link">Requests</a>
@@ -62,32 +62,58 @@
     <div class="row">
       <div class="col">
         <div class="floating-box">
-          <h1>Accounts</h1>
-          <h4 id="accounts-total-balance">Total balance: </h4>
+          <h1>Transfer</h1>
 
-          <div id="account-list-container">
-            <ul id="account-list" class="account-list"></ul>
+          <select id="transfer-type" class="form-select mb-2" onchange="updateTransferUI(event)">
+            <option value="select" selected>Select Type</option>
+            <option value="Deposit">Deposit</option>
+            <option value="Internal">Internal</option>
+            <option value="External">External</option>
+          </select>
+
+          <div id="transfer-ui-container">
+            
           </div>
 
-          <template id="account-list-item-template">
-            <li class="account-list-item">
-              <a class="account-name link-offset-2 link-offset-1-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="#"></a>
-              <div class="account-type"></div>
-              <div class="account-balance"></div>
-            </li>
+          <template id="deposit-item-template">
+            <div class="transfer-ui-div">
+              <div>
+                <select class="deposit-account-select form-select mb-2"></select>
+              </div>
+              <input class="deposit-amount-input" placeholder="Amount" type="number" class="form-control">
+              <button type="button" class="btn btn-primary" onclick="requestDeposit()">Deposit Money</button>
+            </div>
           </template>
+
+          <template id="internal-transfer-item-template">
+            <div class="transfer-ui-div">
+              <div class="form-floating">
+                <select id="transfer-source-select" class="transfer-source-select form-select mb-2" onchange="transferSourceSelected()">
+                  <option value=""></option>
+                </select>
+                <label for="transfer-source-select">From</label>
+              </div>
+              <div class="internal-transfer-destination-div form-floating hidden">
+                <select id="transfer-destination-select" class="transfer-destination-select form-select mb-2" onchange="transferDestinationSelected()">
+                  <option value=""></option>
+                </select>
+                <label for="transfer-destination-select">To</label>
+              </div>
+              <div class="internal-transfer-amount-div hidden">
+                <input class="internal-transfer-amount-input" placeholder="Amount" type="number" class="form-control">
+                <button type="button" class="btn btn-primary" onclick="requestInternalTransfer()">Transfer</button>
+              </div>
+            </div>
+          </template>
+
         </div>
       </div>
-      <div class="col">
+      <!-- <div class="col">
         <div class="floating-box">
           <div id="open-account-container" class="mb-2">
             <h1>New Account Details</h1>
             
-            <select id="open-account-type" class="form-select mb-2">
-              <option value="select" selected>Select Type</option>
-              <option value="Savings">Savings</option>
-              <option value="Checking">Checking</option>
-            </select>
+            
             
             <div class="input-group mb-2">
               <input id="open-account-name-input" placeholder="Account Nickname" type="text" class="form-control">
@@ -96,7 +122,7 @@
           </div>
           <button id="new-note-button" type="button" class="btn btn-primary" onclick="openAccount()">Open Account</button>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 
@@ -108,7 +134,7 @@
   <script>
     initData()
     loggedInOutRedirect()
-    initHome()
+    //initHome()
   </script>
 </body>
 </html>

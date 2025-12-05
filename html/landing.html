@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notewords</title>
+  <title>PiggyBank Credit Union</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link rel="stylesheet" href="../css/styles.css">
-  <link rel="icon" type="image/x-icon" href="../assets/notes.png">
+  <link rel="icon" type="image/x-icon" href="../assets/piggy-bank.png">
 </head>
 <body>
 
-  <nav class="navbar navbar-expand-sm bg-body-tertiary sticky-top" data-bs-theme="dark">
+  <nav class="navbar navbar-expand-sm bg-body-tertiary sticky-top pt-1 pb-1" data-bs-theme="dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="landing.html">
-        <img src="../assets/notes.png" alt="NoteWords" height="48">
-        NoteWords
+      <a class="navbar-brand" href="landing.html" style="padding: 0;">
+        <img src="../assets/piggy-bank.png" alt="PiggyBank Credit Union" height="32">
+        <div class="navbar-brand-text d-inline-block d-md-none">PBCU</div>
+        <div class="navbar-brand-text d-none d-md-inline-block">PiggyBank Credit Union</div>
       </a>
-      
     </div>
   </nav>
 
@@ -28,7 +28,7 @@
           <div>
             <input id="login-username" type="text" class="form-control mb-2" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" onkeydown="loginByKeyDown(event)">
             <input id="login-password" type="password" class="form-control mb-2" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" onkeydown="loginByKeyDown(event)">
-            <button id="log-in-button" type="button" class="btn btn-primary" onclick="logInByForm()">Log In</button>
+            <button id="log-in-button" type="button" class="btn btn-warning" onclick="logInByForm()">Log In</button>
           </div>
         </div>
       </div>
@@ -83,7 +83,7 @@
             <div id="passwords-dont-match-output" class="passwords-dont-match-output" style="visibility: hidden;">
               Passwords don't match</button>
             </div>
-            <button id="sign-up-button" type="button" class="btn btn-primary" disabled="true" onclick="signUpForm()">Sign Up</button>
+            <button id="sign-up-button" type="button" class="btn btn-warning" disabled="true" onclick="signUpForm()">Sign Up</button>
             
           </div>
         </div>

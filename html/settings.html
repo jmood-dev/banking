@@ -3,37 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notewords - Manage Settings</title>
+  <title>PiggyBank Credit Union - Manage Settings</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link rel="stylesheet" href="../css/styles.css">
-  <link rel="icon" type="image/x-icon" href="../assets/notes.png">
+  <link rel="icon" type="image/x-icon" href="../assets/piggy-bank.png">
 </head>
 <body>
 
-  <nav class="navbar navbar-expand-sm bg-body-tertiary sticky-top" data-bs-theme="dark">
+  <nav class="navbar navbar-expand-sm bg-body-tertiary sticky-top pt-1 pb-1" data-bs-theme="dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="home.html">
-        <img src="../assets/notes.png" alt="NoteWords" height="48">
-        NoteWords
+      <a class="navbar-brand" href="home.html" style="padding: 0;">
+        <img src="../assets/piggy-bank.png" alt="PiggyBank Credit Union" height="32">
+        <div class="navbar-brand-text d-inline-block d-md-none">PBCU</div>
+        <div class="navbar-brand-text d-none d-md-inline-block">PiggyBank Credit Union</div>
       </a>
       
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      
+
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a href="home.html" class="nav-link">Banking</a>
-          </li>
+        <ul class="navbar-nav me-auto mb-0">
           <li class="nav-item">
             <a id="admin-page-link" href="admin.html" class="nav-link" style="display: none;">Configuration</a>
           </li>
         </ul>
-        <ul class="navbar-nav mb-2 mb-lg-0">
+        <ul class="navbar-nav mb-0">
           <a href="settings.html" class="nav-link active">Settings</a>
-          <button id="log-out-button" type="button" class="btn btn-warning" onclick="logout()">Log Out</button>
+          <button id="log-out-button" type="button" class="btn btn-info" onclick="logout()">Log Out</button>
         </ul>
       </div>
     </div>
@@ -57,7 +54,7 @@
               <p id="change-details-check-output"></p>
             </div>
             
-            <button id="change-details-button" type="button" class="btn btn-primary mb-4" onclick="changeDetails()">Save Changes</button>
+            <button id="change-details-button" type="button" class="btn btn-warning mb-4" onclick="changeDetails()">Save Changes</button>
 
             <div class="input-group mb-2">
               <div id="password-checker-floating-output" class="password-checker-floating-output mb-2" style="display: none;">
@@ -98,7 +95,7 @@
           <div id="passwords-dont-match-output" class="passwords-dont-match-output" style="visibility: hidden;">
             Passwords don't match</button>
           </div>
-          <button id="change-password-button" type="button" class="btn btn-primary" disabled="true" onclick="changePassword()">Change Password</button>
+          <button id="change-password-button" type="button" class="btn btn-warning" disabled="true" onclick="changePassword()">Change Password</button>
         </div>
       </div>
     </div>

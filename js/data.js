@@ -64,7 +64,7 @@ let defaultData = {
         userName: 'admin',
         firstName: 'admin',
         lastName: 'admin',
-        email: 'admin@notewords.com',
+        email: 'admin@pbcu.org',
         password: 'admin'
       },
       previousPasswords: ['admin'],
@@ -246,7 +246,7 @@ function logInUser(user) {
 }
 
 function loggedInOutRedirect() {
-  if (window.location.href.includes("index") || window.location.href.endsWith("jmood-dev.github.io/notewords")  || window.location.href.endsWith("jmood-dev.github.io/notewords/")) {
+  if (window.location.href.includes("index") || window.location.href.endsWith("jmood-dev.github.io/banking")  || window.location.href.endsWith("jmood-dev.github.io/banking/")) {
     window.location.href = "html/landing.html"
   }
   let isLoggedIn = (typeof appData.loggedInUser !== 'undefined')

@@ -101,3 +101,11 @@ body {
   font-size: 1.5em;
   vertical-align: middle;
 }
+
+.added-amount {
+  color: #167649;
+}
+
+.subtracted-amount {
+  color: #d91a2d;
+}

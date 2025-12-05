@@ -640,6 +640,12 @@ function initAccountPage() {
     rowItem.querySelector('.description-row').innerText = transaction.description
     rowItem.querySelector('.type-row').innerText = transaction.type
     rowItem.querySelector('.amount-row').innerText = formatCurrency(transaction.amount)
+    if (transaction.amount < 0) {
+      rowItem.querySelector('.amount-row').classList.add("subtracted-amount")
+    } else {
+      rowItem.querySelector('.amount-row').classList.add("added-amount")
+    }
+
     rowItem.querySelector('.balance-row').innerText = formatCurrency(transaction.balance)
     transactionsTable.append(rowItem)
   }

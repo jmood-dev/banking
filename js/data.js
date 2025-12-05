@@ -255,7 +255,7 @@ function loggedInOutRedirect() {
       window.location.href = "home.html"
     }
   } else {
-    if (window.location.href.includes("home") || window.location.href.includes("settings") || window.location.href.includes("admin") || window.location.href.includes("requests") || window.location.href.includes("transfers")) {
+    if (window.location.href.includes("home") || window.location.href.includes("settings") || window.location.href.includes("admin") || window.location.href.includes("requests") || window.location.href.includes("transfers") || window.location.href.includes("account")) {
       window.location.href = "landing.html"
     }
   }
@@ -562,7 +562,7 @@ function initHome() {
     let account = appData.loggedInUser.accounts[i]
     let listItem = document.getElementById("account-list-item-template").content.firstElementChild.cloneNode(true)
     listItem.querySelector(".account-name").innerHTML = account.nickname
-    //listItem.querySelector(".account-name").onclick = () => {loadAccount(i)}
+    listItem.querySelector(".account-name").href = "account.html?id=" + appData.loggedInUser.accounts[i].id
     listItem.querySelector(".account-type").innerHTML = "Type: " + account.type
     listItem.querySelector(".account-balance").innerHTML = "Balance: " + formatCurrency(account.balance)
     totalBalance += account.balance
@@ -622,6 +622,25 @@ function deleteCurrentNote() {
 
   document.getElementById("note-name-input").value = ''
   document.getElementById("note-content-input").value = ''
+}
+
+function initAccountPage() {
+  let account = findUserAndAccountForAccountNumber((new URLSearchParams(window.location.search)).get('id')).account
+  document.getElementById('account-name').innerText = account.nickname
+  document.getElementById('account-type').innerText = "Type: " + account.type
+  document.getElementById('account-id').innerText = "Account Number: " + account.id
+  document.getElementById('account-balance').innerText = "Balance: " + formatCurrency(account.balance)
+
+  let transactionsTable = document.getElementById('transactions-table')
+  for (let transaction of account.transactions) {
+    let rowItem = document.getElementById("transaction-row-item-template").content.firstElementChild.cloneNode(true)
+    rowItem.querySelector('.date-time-row').innerText = (new Date(transaction.dateTime)).toLocaleString()
+    rowItem.querySelector('.description-row').innerText = transaction.description
+    rowItem.querySelector('.type-row').innerText = transaction.type
+    rowItem.querySelector('.amount-row').innerText = formatCurrency(transaction.amount)
+    rowItem.querySelector('.balance-row').innerText = formatCurrency(transaction.balance)
+    transactionsTable.append(rowItem)
+  }
 }
 
 function initTransferUI() {
@@ -762,8 +781,10 @@ function requestInternalTransfer() {
 
   let destnationAccountSelectValue = document.getElementById('transfer-destination-select').value
   let destnationAccount = appData.loggedInUser.accounts.find(e => e.id == destnationAccountSelectValue)
+  let destinationUser = {}
   if (destnationAccountSelectValue.includes("connection")) {
     destnationAccount = findUserAndAccountForAccountNumber(destnationAccountSelectValue.split(" ")[1]).account
+    destinationUser = findUserAndAccountForAccountNumber(destnationAccountSelectValue.split(" ")[1]).user
   }
 
   let sourceAccountSelectValue = document.getElementById('transfer-source-select').value
@@ -781,6 +802,24 @@ function requestInternalTransfer() {
   } else {
     sourceAccount.balance -= amount
     destnationAccount.balance += amount
+
+    let sourceTransaction = {
+      dateTime: new Date(),
+      description: "Transfer to " + destinationUser.details.firstName + " " + destinationUser.details.lastName + "'s " + destnationAccount.nickname,
+      type: "Internal Transfer",
+      amount: -amount,
+      balance: new Number(sourceAccount.balance)
+    }
+    sourceAccount.transactions.unshift(sourceTransaction)
+
+    let destinationTransaction = {
+      dateTime: new Date(),
+      description: "Transfer from " + appData.loggedInUser.details.firstName + " " + appData.loggedInUser.details.lastName + "'s " + sourceAccount.nickname,
+      type: "Internal Transfer",
+      amount: amount,
+      balance: new Number(destnationAccount.balance)
+    }
+    destnationAccount.transactions.unshift(destinationTransaction)
   }
 
   saveData()
@@ -810,6 +849,15 @@ function requestExternalTransfer() {
 
   if (transferDirection == 'outgoing') {
     userAccount.balance -= transferAmount
+
+    let transaction = {
+      dateTime: new Date(),
+      description: "Transfer to " + transferRoutingNumber + " " + transferAccountNumber,
+      type: "External Transfer",
+      amount: -transferAmount,
+      balance: new Number(userAccount.balance)
+    }
+    userAccount.transactions.unshift(transaction)
   } else {
     let newExternalTransferRequest = {
       user: appData.loggedInUser.details.userName,
@@ -894,6 +942,14 @@ function approveRequest(type, index) {
     let user = appData.users[request.user]
     let account = user.accounts.find(e => e.id == request.accountId)
     account.balance += Number(request.amount)
+    let transaction = {
+      dateTime: new Date(),
+      description: "Deposit into " + account.nickname,
+      type: "Desposit",
+      amount: request.amount,
+      balance: new Number(account.balance)
+    }
+    account.transactions.unshift(transaction)
   } else if (type == 'connections') {
     let newConnection = {
       user: appData.loggedInUser.details.username,
@@ -901,10 +957,39 @@ function approveRequest(type, index) {
     }
     appData.users[request.user].connections.push(newConnection)
   } else if (type == 'internalTranfers') {
-    findUserAndAccountForAccountNumber(request.sourceAccountId).account.balance -= request.amount
-    findUserAndAccountForAccountNumber(request.destinationAccountId).account.balance += request.amount
+    let {account: sourceAccount, user: sourceUser} = findUserAndAccountForAccountNumber(request.sourceAccountId)
+    sourceAccount.balance -= request.amount
+    let {account: destnationAccount, user: destinationUser} = findUserAndAccountForAccountNumber(request.destinationAccountId)
+    destnationAccount.balance += request.amount
+
+    let sourceTransaction = {
+      dateTime: new Date(),
+      description: "Transfer to " + destinationUser.details.firstName + " " + destinationUser.details.lastName + "'s " + destnationAccount.nickname,
+      type: "Internal Transfer",
+      amount: -request.amount,
+      balance: new Number(sourceAccount.balance)
+    }
+    sourceAccount.transactions.unshift(sourceTransaction)
+
+    let destinationTransaction = {
+      dateTime: new Date(),
+      description: "Transfer from " + sourceUser.details.firstName + " " + sourceUser.details.lastName + "'s " + sourceAccount.nickname,
+      type: "Internal Transfer",
+      amount: request.amount,
+      balance: new Number(destnationAccount.balance)
+    }
+    destnationAccount.transactions.unshift(destinationTransaction)
   } else if (type == 'incomingExternals') {
-    findUserAndAccountForAccountNumber(request.userAccountId).account.balance += Number(request.amount)
+    let account = findUserAndAccountForAccountNumber(request.userAccountId).account
+    account.balance += Number(request.amount)
+    let transaction = {
+      dateTime: new Date(),
+      description: "Transfer from " + request.externalRoutingNumber + " " + request.externalAccountNumber,
+      type: "External Transfer",
+      amount: request.amount,
+      balance: new Number(account.balance)
+    }
+    account.transactions.unshift(transaction)
   }
   saveData()
   initRequests()
@@ -942,5 +1027,9 @@ function formatCurrency(amount) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   };
+  let amountNum = Number(amount)
+  if (amountNum < 0) {
+    return "-$" + (-amountNum).toLocaleString('en-US', options);
+  }
   return "$" + Number(amount).toLocaleString('en-US', options);
 }

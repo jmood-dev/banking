@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notewords</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../assets/notes.png">
+</head>
+<body>
+  
+  <nav class="navbar navbar-expand-sm bg-body-tertiary sticky-top" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="home.html">
+        <img src="../assets/notes.png" alt="NoteWords" height="48">
+        NoteWords
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a href="home.html" class="nav-link active">Banking</a>
+          </li>
+          <li class="nav-item">
+            <a id="admin-page-link" href="admin.html" class="nav-link" style="display: none;">Configuration</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <a href="settings.html" class="nav-link">Settings</a>
+          <button id="log-out-button" type="button" class="btn btn-warning" onclick="logout()">Log Out</button>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <nav class="navbar navbar-expand-sm bg-body-tertiary sticky-top" data-bs-theme="light">
+    <div class="container-fluid">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a href="home.html" class="nav-link active">Accounts</a>
+        </li>
+        <li class="nav-item">
+          <a href="transfers.html" class="nav-link">Transfers</a>
+        </li>
+        <li class="nav-item">
+          <a href="requests.html" class="nav-link">Requests</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div></div>
+  
+
+  <div class="container" style="margin-top: 10vh;">
+    <div class="row">
+      <div class="col">
+        <div class="floating-box">
+          <h1 id="account-name" class="text-center"></h1>
+          <h4 id="account-type">Type: </h4>
+          <h4 id="account-id">Account Number: </h4>
+          <h4 id="account-balance">Balance: </h4>
+
+          <div id="transactions-list-container">
+            <table id="transactions-table" style="border-spacing: 10px; border-collapse: separate;">
+              <tr>
+                <th style="width:25%">Date & Time</th>
+                <th style="width:40%">Description</th>
+                <th style="width:15%">Type</th>
+                <th style="width:10%">Amount</th>
+                <th style="width:10%">Balance</th>
+              </tr>
+            </table>
+          </div>
+
+          <template id="transaction-row-item-template">
+            <tr>
+              <td class="date-time-row"></td>
+              <td class="description-row"></td>
+              <td class="type-row"></td>
+              <td class="amount-row"></td>
+              <td class="balance-row"></td>
+            </tr>
+          </template>
+        </div>
+      </div>
+      <!-- <div class="col">
+        <div class="floating-box">
+          <div id="open-account-container" class="mb-2">
+            <h1>Actions</h1>
+        </div>
+      </div> -->
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
+  <script src="../js/data.js"></script>
+  <script src="../assets/commonPasswords.js"></script>
+  
+  <script>
+    initData()
+    loggedInOutRedirect()
+    initAccountPage()
+  </script>
+</body>
+</html>

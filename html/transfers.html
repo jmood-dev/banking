@@ -103,6 +103,13 @@
                 <input class="internal-transfer-amount-input" placeholder="Amount" type="number" class="form-control">
                 <button type="button" class="btn btn-primary" onclick="requestInternalTransfer()">Transfer</button>
               </div>
+              <div class="internal-transfer-new-connection-div hidden">
+                <div class="form-floating">
+                  <input id="internal-transfer-new-connection-input" placeholder="Amount" type="text" class="form-control">
+                  <label for="internal-transfer-new-connection-input">Account Number</label>
+                  <button type="button" class="btn btn-primary" onclick="requestNewConnection()">Request Link</button>
+                </div>
+              </div>
             </div>
           </template>
 
@@ -134,7 +141,7 @@
   <script>
     initData()
     loggedInOutRedirect()
-    //initHome()
+    initTransferUI()
   </script>
 </body>
 </html>

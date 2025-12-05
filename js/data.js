@@ -70,7 +70,7 @@ let defaultData = {
       previousPasswords: ['admin'],
       accounts: [
         {
-          id: crypto.randomUUID(),
+          id: generateAccountNumber(),
           type: "Savings",
           nickname: "My Savings",
           balance: 0,
@@ -80,8 +80,10 @@ let defaultData = {
       requests: {
         deposits: [],
         incomingExternals: [],
-        internalTranfers: []
-      }
+        internalTranfers: [],
+        connections: []
+      },
+      connections: []
     }
   }, 
   configuration: {
@@ -332,13 +334,14 @@ function signUpForm() {
   newUser.details.password = passwordInput.value
   newUser.previousPasswords = [passwordInput.value]
   newUser.accounts = [{
-    id: crypto.randomUUID(),
+    id: generateAccountNumber(),
     type: "Savings",
     nickname: "My Savings",
     balance: 0,
     transactions: []
   }]
   newUser.requests = []
+  newUser.connections = []
 
   appData.users[usernameInput.value] = newUser
   saveData()
@@ -589,7 +592,7 @@ function updateNote() {
 function openAccount() {
   
   let newAccount = {
-    id: crypto.randomUUID(),
+    id: generateAccountNumber(),
     type: document.getElementById('open-account-type').value,
     nickname: document.getElementById('open-account-name-input').value,
     balance: 0,
@@ -616,12 +619,11 @@ function deleteCurrentNote() {
   document.getElementById("note-content-input").value = ''
 }
 
-function formatCurrency(amount) {
-  const options = {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  };
-  return "$" + Number(amount).toLocaleString('en-US', options);
+function initTransferUI() {
+  transferUiContainer = document.getElementById('transfer-ui-container')
+  transferUiContainer.replaceChildren()
+
+  document.getElementById('transfer-type').value = 'select'
 }
 
 function updateTransferUI(event) {
@@ -647,6 +649,18 @@ function updateTransferUI(event) {
       option.innerText = account.nickname + " (" + formatCurrency(account.balance) + ")"
       sourceAccountSelect.append(option)
     }
+    for (let connection of appData.loggedInUser.connections) {
+      let {user, account} = findUserAndAccountForAccountNumber(connection.accountId)
+      let option = document.createElement("option")
+      option.value = "connection " + connection.accountId
+      option.innerText = user.details.firstName + " " + user.details.lastName + ": " + account.nickname + " (" + account.type + ")"
+      sourceAccountSelect.append(option)
+    }
+
+    let option = document.createElement("option")
+    option.value = 'newConnection'
+    option.innerText = '(Link New Account)'
+    sourceAccountSelect.append(option)
   } else if (event.target.value == "External") {
 
   }
@@ -670,46 +684,109 @@ function transferSourceSelected() {
   
   internalTransferDestinationDiv.querySelector('.transfer-destination-select')
   let sourceAccountSelect = document.querySelector('.transfer-source-select')
-  let destnationAccountSelect = document.getElementById('transfer-destination-select')
-  destnationAccountSelect.replaceChildren()
-  destnationAccountSelect.append(document.createElement('option'))
-  for (let account of appData.loggedInUser.accounts) {
-    if (sourceAccountSelect.value != account.id) {
-      let option = document.createElement("option")
-      option.value = account.id
-      option.innerText = account.nickname + " (" + formatCurrency(account.balance) + ")"
-      destnationAccountSelect.append(option)
-    }
-  }
 
-  internalTransferDestinationDiv.classList.remove("hidden")
-
+  let internalTransferNewConnectionDiv = document.querySelector('.internal-transfer-new-connection-div')
   let internalTransferAmountDiv = document.querySelector('.internal-transfer-amount-div')
-  internalTransferAmountDiv.classList.add("hidden")
-  document.querySelector('.internal-transfer-amount-input').value = ''
+
+  if (document.getElementById('transfer-source-select').value == 'newConnection') {
+    internalTransferDestinationDiv.classList.add("hidden")
+    internalTransferAmountDiv.classList.add("hidden")
+    internalTransferNewConnectionDiv.classList.remove("hidden")
+  } else {
+    internalTransferDestinationDiv.classList.remove("hidden")
+    internalTransferNewConnectionDiv.classList.add("hidden")
+
+    let destnationAccountSelect = document.getElementById('transfer-destination-select')
+    destnationAccountSelect.replaceChildren()
+    destnationAccountSelect.append(document.createElement('option'))
+    for (let account of appData.loggedInUser.accounts) {
+      if (sourceAccountSelect.value != account.id) {
+        let option = document.createElement("option")
+        option.value = account.id
+        option.innerText = account.nickname + " (" + formatCurrency(account.balance) + ")"
+        destnationAccountSelect.append(option)
+      }
+    }
+    if (!sourceAccountSelect.value.includes('connection')) {
+      for (let connection of appData.loggedInUser.connections) {
+        if (sourceAccountSelect.value != connection.accountId) {
+          let {user, account} = findUserAndAccountForAccountNumber(connection.accountId)
+          let option = document.createElement("option")
+          option.value = "connection " + connection.accountId
+          option.innerText = user.details.firstName + " " + user.details.lastName + ": " + account.nickname + " (" + account.type + ")"
+          destnationAccountSelect.append(option)
+        }
+      }
+    }
+
+    let option = document.createElement("option")
+    option.value = 'newConnection'
+    option.innerText = '(Link New Account)'
+    destnationAccountSelect.append(option)
+
+    internalTransferDestinationDiv.classList.remove("hidden")
+
+    internalTransferAmountDiv.classList.add("hidden")
+    document.querySelector('.internal-transfer-amount-input').value = ''
+  }
 }
 
 function transferDestinationSelected() {
+  let internalTransferNewConnectionDiv = document.querySelector('.internal-transfer-new-connection-div')
   let internalTransferAmountDiv = document.querySelector('.internal-transfer-amount-div')
-  internalTransferAmountDiv.classList.remove("hidden")
+
+  if (document.getElementById('transfer-destination-select').value == 'newConnection') {
+    internalTransferAmountDiv.classList.add("hidden")
+    internalTransferNewConnectionDiv.classList.remove("hidden")
+  } else {
+    internalTransferAmountDiv.classList.remove("hidden")
+    internalTransferNewConnectionDiv.classList.add("hidden")
+  }
+  
 }
 
 function requestInternalTransfer() {
-  let sourceAccountSelect = document.getElementById('transfer-source-select')
-  let sourceAccount = appData.loggedInUser.accounts.find(e => e.id == sourceAccountSelect.value)
-  let destnationAccountSelect = document.getElementById('transfer-destination-select')
-  let destnationAccount = appData.loggedInUser.accounts.find(e => e.id == destnationAccountSelect.value)
-
   let amount = Number(document.querySelector('.internal-transfer-amount-input').value)
-  sourceAccount.balance -= amount
-  destnationAccount.balance += amount
 
-  transferUiContainer = document.getElementById('transfer-ui-container')
-  transferUiContainer.replaceChildren()
+  let destnationAccountSelectValue = document.getElementById('transfer-destination-select').value
+  let destnationAccount = appData.loggedInUser.accounts.find(e => e.id == destnationAccountSelectValue)
+  if (destnationAccountSelectValue.includes("connection")) {
+    destnationAccount = findUserAndAccountForAccountNumber(destnationAccountSelectValue.split(" ")[1]).account
+  }
 
-  document.getElementById('transfer-type').value = 'select'
+  let sourceAccountSelectValue = document.getElementById('transfer-source-select').value
+  let sourceAccount = appData.loggedInUser.accounts.find(e => e.id == sourceAccountSelectValue)
+  if (sourceAccountSelectValue.includes("connection")) {
+    let {user, account} = findUserAndAccountForAccountNumber(sourceAccountSelectValue.split(" ")[1])
+    sourceAccount = account
+    let newInternalTransferRequest = {
+      user: appData.loggedInUser.details.userName,
+      sourceAccountId: sourceAccount.id,
+      destinationAccountId: destnationAccount.id,
+      amount: amount
+    }
+    user.requests.internalTranfers.push(newInternalTransferRequest)
+  } else {
+    sourceAccount.balance -= amount
+    destnationAccount.balance += amount
+  }
 
-  saveData()  
+  saveData()
+  initTransferUI()
+}
+
+function requestNewConnection() {
+  let accountNumber = document.getElementById('internal-transfer-new-connection-input').value
+  let newConnectionRequest = {
+    user: appData.loggedInUser.details.userName,
+    accountId: accountNumber
+  }
+  let user = findUserAndAccountForAccountNumber(accountNumber).user
+  if (user) {
+    user.requests.connections.push(newConnectionRequest)
+  }
+  saveData()
+  initTransferUI()
 }
 
 function initRequests() {
@@ -725,6 +802,26 @@ function initRequests() {
     listItem.querySelector(".decline-request-button").onclick = () => {declineRequest('deposits', i)}
     requestList.append(listItem)
   }
+  for (let i = 0; i < appData.loggedInUser.requests.connections.length; i++) {
+    let request = appData.loggedInUser.requests.connections[i]
+    let listItem = document.getElementById("request-list-item-template").content.firstElementChild.cloneNode(true)
+    listItem.querySelector(".request-user").innerHTML = "From: " + appData.users[request.user].details.firstName + " " + appData.users[request.user].details.lastName
+    listItem.querySelector(".request-type").innerHTML = "Type: Link Account"
+    listItem.querySelector(".request-amount").classList.add("hidden")
+    listItem.querySelector(".approve-request-button").onclick = () => {approveRequest('connections', i)}
+    listItem.querySelector(".decline-request-button").onclick = () => {declineRequest('connections', i)}
+    requestList.append(listItem)
+  }
+  for (let i = 0; i < appData.loggedInUser.requests.internalTranfers.length; i++) {
+    let request = appData.loggedInUser.requests.internalTranfers[i]
+    let listItem = document.getElementById("request-list-item-template").content.firstElementChild.cloneNode(true)
+    listItem.querySelector(".request-user").innerHTML = "From: " + appData.users[request.user].details.firstName + " " + appData.users[request.user].details.lastName
+    listItem.querySelector(".request-type").innerHTML = "Type: Tranfer"
+    listItem.querySelector(".request-amount").innerHTML = "Amount: " + formatCurrency(request.amount) + " drawn from your account " + findUserAndAccountForAccountNumber(request.sourceAccountId).account.nickname
+    listItem.querySelector(".approve-request-button").onclick = () => {approveRequest('internalTranfers', i)}
+    listItem.querySelector(".decline-request-button").onclick = () => {declineRequest('internalTranfers', i)}
+    requestList.append(listItem)
+  }
 }
 
 function approveRequest(type, index) {
@@ -734,6 +831,15 @@ function approveRequest(type, index) {
     let user = appData.users[request.user]
     let account = user.accounts.find(e => e.id == request.accountId)
     account.balance += Number(request.amount)
+  } else if (type == 'connections') {
+    let newConnection = {
+      user: appData.loggedInUser.details.username,
+      accountId: request.accountId
+    }
+    appData.users[request.user].connections.push(newConnection)
+  } else if (type == 'internalTranfers') {
+    findUserAndAccountForAccountNumber(request.sourceAccountId).account.balance -= request.amount
+    findUserAndAccountForAccountNumber(request.destinationAccountId).account.balance += request.amount
   }
   saveData()
   initRequests()
@@ -744,4 +850,32 @@ function declineRequest(type, index) {
   appData.loggedInUser.requests[type].splice(index, 1)
   saveData()
   initRequests()
+}
+
+function findUserAndAccountForAccountNumber(accountNumber) {
+  for (let username in appData.users) {
+    let user = appData.users[username]
+    for (let account of user.accounts) {
+      if (account.id == accountNumber) {
+        return {user, account}
+      }
+    }
+  }
+  return
+}
+
+function generateAccountNumber() {
+  let accountNumber = ""
+  for (let i = 0; i < 15; i++) {
+    accountNumber += Math.floor(Math.random()*10)
+  }
+  return accountNumber
+}
+
+function formatCurrency(amount) {
+  const options = {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  };
+  return "$" + Number(amount).toLocaleString('en-US', options);
 }

@@ -340,7 +340,12 @@ function signUpForm() {
     balance: 0,
     transactions: []
   }]
-  newUser.requests = []
+  newUser.requests = {
+    deposits: [],
+    incomingExternals: [],
+    internalTranfers: [],
+    connections: []
+  },
   newUser.connections = []
 
   appData.users[usernameInput.value] = newUser
@@ -662,7 +667,14 @@ function updateTransferUI(event) {
     option.innerText = '(Link New Account)'
     sourceAccountSelect.append(option)
   } else if (event.target.value == "External") {
-
+    transferUi = document.getElementById("external-transfer-item-template").content.firstElementChild.cloneNode(true)
+    let userAccountSelect = transferUi.querySelector('.external-transfer-user-account-select')
+    for (let account of appData.loggedInUser.accounts) {
+      let option = document.createElement("option")
+      option.value = account.id
+      option.innerText = account.nickname + " (" + formatCurrency(account.balance) + ")"
+      userAccountSelect.append(option)
+    }
   }
 
   transferUiContainer.append(transferUi)
@@ -789,6 +801,43 @@ function requestNewConnection() {
   initTransferUI()
 }
 
+function requestExternalTransfer() {
+  let userAccount = appData.loggedInUser.accounts.find(e => e.id == document.getElementById('external-transfer-user-account-select').value)
+  let transferDirection = document.getElementById('external-transfer-direction-select').value
+  let transferRoutingNumber = document.getElementById('external-transfer-routing-number-input').value
+  let transferAccountNumber = document.getElementById('external-transfer-account-number-input').value
+  let transferAmount = document.getElementById('external-transfer-amount-input').value
+
+  if (transferDirection == 'outgoing') {
+    userAccount.balance -= transferAmount
+  } else {
+    let newExternalTransferRequest = {
+      user: appData.loggedInUser.details.userName,
+      userAccountId: userAccount.id,
+      externalRoutingNumber: transferRoutingNumber,
+      externalAccountNumber: transferAccountNumber,
+      amount: transferAmount
+    }
+    appData.users.admin.requests.incomingExternals.push(newExternalTransferRequest)
+  }
+
+  saveData()
+
+  document.getElementById('external-transfer-direction-select').value = ''
+  document.getElementById('external-transfer-routing-number-input').value = ''
+  document.getElementById('external-transfer-account-number-input').value = ''
+  document.getElementById('external-transfer-amount-input').value = ''
+
+  let userAccountSelect = document.getElementById('external-transfer-user-account-select')
+  userAccountSelect.replaceChildren()
+  for (let account of appData.loggedInUser.accounts) {
+    let option = document.createElement("option")
+    option.value = account.id
+    option.innerText = account.nickname + " (" + formatCurrency(account.balance) + ")"
+    userAccountSelect.append(option)
+  }
+}
+
 function initRequests() {
   let requestList = document.getElementById("request-list")
   requestList.replaceChildren()
@@ -822,6 +871,20 @@ function initRequests() {
     listItem.querySelector(".decline-request-button").onclick = () => {declineRequest('internalTranfers', i)}
     requestList.append(listItem)
   }
+  for (let i = 0; i < appData.loggedInUser.requests.incomingExternals.length; i++) {
+    let request = appData.loggedInUser.requests.incomingExternals[i]
+    let listItem = document.getElementById("request-list-item-template").content.firstElementChild.cloneNode(true)
+    listItem.querySelector(".request-user").innerHTML = "From: " + appData.users[request.user].details.firstName + " " + appData.users[request.user].details.lastName
+    listItem.querySelector(".request-type").innerHTML = "Type: Incoming External Transfer"
+    listItem.querySelector(".request-routing-number").innerHTML = "Routing Number: " + request.externalRoutingNumber
+    listItem.querySelector(".request-routing-number").classList.remove("hidden")
+    listItem.querySelector(".request-account-number").innerHTML = "Account Number: " + request.externalAccountNumber
+    listItem.querySelector(".request-account-number").classList.remove("hidden")
+    listItem.querySelector(".request-amount").innerHTML = "Amount: " + formatCurrency(request.amount)
+    listItem.querySelector(".approve-request-button").onclick = () => {approveRequest('incomingExternals', i)}
+    listItem.querySelector(".decline-request-button").onclick = () => {declineRequest('incomingExternals', i)}
+    requestList.append(listItem)
+  }
 }
 
 function approveRequest(type, index) {
@@ -840,6 +903,8 @@ function approveRequest(type, index) {
   } else if (type == 'internalTranfers') {
     findUserAndAccountForAccountNumber(request.sourceAccountId).account.balance -= request.amount
     findUserAndAccountForAccountNumber(request.destinationAccountId).account.balance += request.amount
+  } else if (type == 'incomingExternals') {
+    findUserAndAccountForAccountNumber(request.userAccountId).account.balance += Number(request.amount)
   }
   saveData()
   initRequests()

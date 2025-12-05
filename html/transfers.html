@@ -113,6 +113,35 @@
             </div>
           </template>
 
+          <template id="external-transfer-item-template">
+            <div class="transfer-ui-div">
+              <div class="form-floating">
+                <select id="external-transfer-user-account-select" class="external-transfer-user-account-select form-select mb-2"></select>
+                <label for="external-transfer-user-account-select">Your Account</label>
+              </div>
+              <div class="form-floating">
+                <select id="external-transfer-direction-select" class="transfer-direction-select form-select mb-2">
+                  <option value=""></option>
+                  <option value="incoming">Receive Money</option>
+                  <option value="outgoing">Send Money</option>
+                </select>
+                <label for="external-transfer-direction-select">I want to</label>
+              </div>
+              <div class="form-floating">
+                <input id="external-transfer-routing-number-input" placeholder="Routing Number" type="text" class="form-control mb-2">
+                <label for="external-transfer-routing-number-input">Routing Number</label>
+              </div>
+              <div class="form-floating">
+                <input id="external-transfer-account-number-input" placeholder="Account Number" type="text" class="form-control mb-2">
+                <label for="external-transfer-account-number-input">Account Number</label>
+              </div>
+              <div class="external-transfer-amount-div">
+                <input id="external-transfer-amount-input" placeholder="Amount" type="number" class="mb-2 external-transfer-amount-input">
+                <button type="button" class="btn btn-primary" onclick="requestExternalTransfer()">Transfer</button>
+              </div>
+            </div>
+          </template>
+
         </div>
       </div>
       <!-- <div class="col">

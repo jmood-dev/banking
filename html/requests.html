@@ -46,7 +46,9 @@
           <a href="transfers.html" class="nav-link">Transfers</a>
         </li>
         <li class="nav-item">
-          <a href="requests.html" class="nav-link active">Requests</a>
+          <a href="requests.html" class="nav-link position-relative active">Requests
+            <span id="requests-badge" class="position-absolute top-25 start-100 translate-middle badge rounded-pill bg-danger hidden"></span>
+          </a>
         </li>
       </ul>
     </div>
@@ -75,7 +77,7 @@
                   <div class="request-account-number hidden"></div>
                   <div class="request-amount"></div>
                 </div>
-                <div>
+                <div class="button-div">
                   <button type="button" class="btn btn-success approve-request-button">Approve</button>
                   <button type="button" class="btn btn-danger decline-request-button">Decline</button>
                 </div>

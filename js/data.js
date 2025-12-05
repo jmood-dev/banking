@@ -569,6 +569,8 @@ function initHome() {
     accountList.append(listItem)
   }
   document.getElementById('accounts-total-balance').innerText = "Total balance: " + formatCurrency(totalBalance)
+
+  updateRequestsBadge()
 }
 
 function loadNote(index) {
@@ -641,6 +643,8 @@ function initAccountPage() {
     rowItem.querySelector('.balance-row').innerText = formatCurrency(transaction.balance)
     transactionsTable.append(rowItem)
   }
+
+  updateRequestsBadge()
 }
 
 function initTransferUI() {
@@ -648,6 +652,8 @@ function initTransferUI() {
   transferUiContainer.replaceChildren()
 
   document.getElementById('transfer-type').value = 'select'
+
+  updateRequestsBadge()
 }
 
 function updateTransferUI(event) {
@@ -708,6 +714,7 @@ function requestDeposit() {
   document.querySelector('.deposit-amount-input').value = ''
   appData.users['admin'].requests.deposits.push(newDepositRequest)
   saveData()
+  updateRequestsBadge()
 }
 
 function transferSourceSelected() {
@@ -802,10 +809,17 @@ function requestInternalTransfer() {
   } else {
     sourceAccount.balance -= amount
     destnationAccount.balance += amount
+    
+    let sourceTransactionDescription = "Transfer to " + destnationAccount.nickname
+    let destinationTransactionDescription = "Transfer from " + sourceAccount.nickname
+    if (destnationAccountSelectValue.includes("connection")) {
+      sourceTransactionDescription = "Transfer to " + destinationUser.details.firstName + " " + destinationUser.details.lastName + "'s " + destnationAccount.nickname
+      destinationTransactionDescription = "Transfer from " + appData.loggedInUser.details.firstName + " " + appData.loggedInUser.details.lastName + "'s " + sourceAccount.nickname
+    }
 
     let sourceTransaction = {
       dateTime: new Date(),
-      description: "Transfer to " + destinationUser.details.firstName + " " + destinationUser.details.lastName + "'s " + destnationAccount.nickname,
+      description: sourceTransactionDescription,
       type: "Internal Transfer",
       amount: -amount,
       balance: new Number(sourceAccount.balance)
@@ -814,7 +828,7 @@ function requestInternalTransfer() {
 
     let destinationTransaction = {
       dateTime: new Date(),
-      description: "Transfer from " + appData.loggedInUser.details.firstName + " " + appData.loggedInUser.details.lastName + "'s " + sourceAccount.nickname,
+      description: destinationTransactionDescription,
       type: "Internal Transfer",
       amount: amount,
       balance: new Number(destnationAccount.balance)
@@ -824,6 +838,7 @@ function requestInternalTransfer() {
 
   saveData()
   initTransferUI()
+  updateRequestsBadge()
 }
 
 function requestNewConnection() {
@@ -838,6 +853,7 @@ function requestNewConnection() {
   }
   saveData()
   initTransferUI()
+  updateRequestsBadge()
 }
 
 function requestExternalTransfer() {
@@ -883,6 +899,19 @@ function requestExternalTransfer() {
     option.value = account.id
     option.innerText = account.nickname + " (" + formatCurrency(account.balance) + ")"
     userAccountSelect.append(option)
+  }
+
+  updateRequestsBadge()
+}
+
+function updateRequestsBadge() {
+  let requestsBadge = document.getElementById('requests-badge')
+  let numRequests = appData.loggedInUser.requests.connections.length + appData.loggedInUser.requests.deposits.length + appData.loggedInUser.requests.incomingExternals.length + appData.loggedInUser.requests.internalTranfers.length
+  requestsBadge.innerText = numRequests
+  if (numRequests > 0) {
+    requestsBadge.classList.remove("hidden")
+  } else {
+    requestsBadge.classList.add("hidden")
   }
 }
 
@@ -933,6 +962,17 @@ function initRequests() {
     listItem.querySelector(".decline-request-button").onclick = () => {declineRequest('incomingExternals', i)}
     requestList.append(listItem)
   }
+
+  if (requestList.children.length == 0) {
+    let listItem = document.getElementById("request-list-item-template").content.firstElementChild.cloneNode(true)
+    listItem.querySelector(".request-user").classList.add("hidden")
+    listItem.querySelector(".request-type").innerText = "No pending requests."
+    listItem.querySelector(".request-amount").classList.add("hidden")
+    listItem.querySelector(".button-div").classList.add("hidden")
+    requestList.append(listItem)
+  }
+
+  updateRequestsBadge()
 }
 
 function approveRequest(type, index) {

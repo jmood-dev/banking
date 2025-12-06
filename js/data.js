@@ -596,6 +596,10 @@ function updateNote() {
   initHome()
 }
 
+function checkCanOpenAccount() {
+  document.getElementById('open-account-button').disabled = document.getElementById('open-account-type').value == 'select'
+}
+
 function openAccount() {
   
   let newAccount = {
@@ -613,6 +617,7 @@ function openAccount() {
 
   saveData()
   initHome()
+  checkCanOpenAccount()
 }
 
 function deleteCurrentNote() {

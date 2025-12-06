@@ -82,7 +82,7 @@
           <div id="open-account-container" class="mb-2">
             <h1>New Account Details</h1>
             
-            <select id="open-account-type" class="form-select mb-2">
+            <select id="open-account-type" class="form-select mb-2" onchange="checkCanOpenAccount()">
               <option value="select" selected>Select Type</option>
               <option value="Savings">Savings</option>
               <option value="Checking">Checking</option>
@@ -93,7 +93,7 @@
             </div>
 
           </div>
-          <button id="new-note-button" type="button" class="btn btn-warning" onclick="openAccount()">Open Account</button>
+          <button id="open-account-button" type="button" class="btn btn-warning" onclick="openAccount()" disabled>Open Account</button>
         </div>
       </div>
     </div>

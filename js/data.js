@@ -573,29 +573,6 @@ function initHome() {
   updateRequestsBadge()
 }
 
-function loadNote(index) {
-  let note = appData.loggedInUser.notes[index]
-  appData.currentNoteIndex = index
-
-  document.getElementById("note-edit-container").style.display = 'block'
-  document.getElementById("note-name-input").value = note.name != '' ? note.name : '(Untitled Note)'
-  document.getElementById("note-content-input").value = note.content
-
-  saveData()
-}
-
-function updateNote() {
-  document.getElementById("note-edit-container").style.display = 'block'
-
-  let note = appData.loggedInUser.notes[appData.currentNoteIndex]
-  note.name = document.getElementById("note-name-input").value
-  note.content = document.getElementById("note-content-input").value
-  appData.loggedInUser.notes[appData.currentNoteIndex] = note
-
-  saveData()
-  initHome()
-}
-
 function checkCanOpenAccount() {
   document.getElementById('open-account-button').disabled = document.getElementById('open-account-type').value == 'select' || document.getElementById('open-account-name-input').value == ''
 }
@@ -620,17 +597,6 @@ function openAccount() {
   saveData()
   initHome()
   checkCanOpenAccount()
-}
-
-function deleteCurrentNote() {
-  appData.loggedInUser.notes.splice(appData.currentNoteIndex, 1)
-  saveData()
-  initHome()
-
-  document.getElementById("note-edit-container").style.display = 'none'
-
-  document.getElementById("note-name-input").value = ''
-  document.getElementById("note-content-input").value = ''
 }
 
 function initAccountPage() {

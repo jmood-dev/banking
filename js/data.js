@@ -773,7 +773,7 @@ function requestInternalTransfer() {
   let amount = Number(document.querySelector('.internal-transfer-amount-input').value)
 
   if (amount < 0.01) {
-    postAlert("You cannot tranfer an amount less than $0.01", 'dark')
+    postAlert("You cannot transfer an amount less than $0.01", 'dark')
     return
   }
 
@@ -971,7 +971,7 @@ function initRequests() {
     let request = appData.loggedInUser.requests.internalTranfers[i]
     let listItem = document.getElementById("request-list-item-template").content.firstElementChild.cloneNode(true)
     listItem.querySelector(".request-user").innerHTML = "From: " + appData.users[request.user].details.firstName + " " + appData.users[request.user].details.lastName
-    listItem.querySelector(".request-type").innerHTML = "Type: Tranfer"
+    listItem.querySelector(".request-type").innerHTML = "Type: Transfer"
     listItem.querySelector(".request-amount").innerHTML = "Amount: " + formatCurrency(request.amount) + " drawn from your account " + findUserAndAccountForAccountNumber(request.sourceAccountId).account.nickname
     listItem.querySelector(".approve-request-button").onclick = () => {approveRequest('internalTranfers', i)}
     listItem.querySelector(".decline-request-button").onclick = () => {declineRequest('internalTranfers', i)}

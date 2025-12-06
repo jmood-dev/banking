@@ -7,6 +7,10 @@ body {
   background-attachment: fixed;
 }
 
+.subnavbar {
+  top: 3.3em;
+}
+
 .floating-box {
   background-color: rgb(215, 206, 178, 0.7);
   border-radius: 5px;

@@ -54,7 +54,28 @@
     </div>
   </nav>
 
-  <div></div>
+  <div style="position: relative; width: 100%;" class="text-center">
+    <div style="position: absolute; left: 50%;">
+      <div id="alert-list" style="position: relative; left: -50%;" class="mt-2"></div>
+    </div>
+  </div>
+  
+  <template id="alert-item-template">
+    <div>
+      <div class="alert alert-success hidden" role="alert" style="z-index: 100;">
+        <span class="message"></span>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+      </div>
+      <div class="alert alert-primary hidden" role="alert" style="z-index: 100;">
+        <span class="message"></span>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+      </div>
+      <div class="alert alert-dark hidden" role="alert" style="z-index: 100;">
+        <span class="message"></span>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+      </div>
+    </div>
+  </template>
   
 
   <div class="container text-center" style="margin-top: 10vh;">

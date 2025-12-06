@@ -615,6 +615,8 @@ function openAccount() {
 
   appData.loggedInUser.accounts.push(newAccount)
 
+  postAlert("Opened new account " + newAccount.nickname + " (" + newAccount.type + ")", 'success')
+
   saveData()
   initHome()
   checkCanOpenAccount()
@@ -726,6 +728,7 @@ function requestDeposit() {
   appData.users['admin'].requests.deposits.push(newDepositRequest)
   saveData()
   updateRequestsBadge()
+  postAlert("Deposit of " + formatCurrency(newDepositRequest.amount) + " sent for approval.", 'primary')
 }
 
 function transferSourceSelected() {
@@ -817,15 +820,18 @@ function requestInternalTransfer() {
       amount: amount
     }
     user.requests.internalTranfers.push(newInternalTransferRequest)
+    postAlert("Transfer of " + formatCurrency(amount) +  " from " + user.details.firstName + " " + user.details.lastName + "'s " +account.nickname + " sent for approval.", 'primary')
   } else {
     sourceAccount.balance -= amount
     destnationAccount.balance += amount
     
     let sourceTransactionDescription = "Transfer to " + destnationAccount.nickname
     let destinationTransactionDescription = "Transfer from " + sourceAccount.nickname
+    let transferToText = destnationAccount.nickname
     if (destnationAccountSelectValue.includes("connection")) {
       sourceTransactionDescription = "Transfer to " + destinationUser.details.firstName + " " + destinationUser.details.lastName + "'s " + destnationAccount.nickname
       destinationTransactionDescription = "Transfer from " + appData.loggedInUser.details.firstName + " " + appData.loggedInUser.details.lastName + "'s " + sourceAccount.nickname
+      transferToText = destinationUser.details.firstName + " " + destinationUser.details.lastName + "'s " + destnationAccount.nickname
     }
 
     let sourceTransaction = {
@@ -845,6 +851,7 @@ function requestInternalTransfer() {
       balance: new Number(destnationAccount.balance)
     }
     destnationAccount.transactions.unshift(destinationTransaction)
+    postAlert(destinationTransactionDescription + " to " + transferToText + " of " + formatCurrency(amount) + " was successful.", 'success')
   }
 
   saveData()
@@ -865,6 +872,7 @@ function requestNewConnection() {
   saveData()
   initTransferUI()
   updateRequestsBadge()
+  postAlert("Request to connect to account with number " + accountNumber + " sent for approval.", 'primary')
 }
 
 function requestExternalTransfer() {
@@ -885,6 +893,7 @@ function requestExternalTransfer() {
       balance: new Number(userAccount.balance)
     }
     userAccount.transactions.unshift(transaction)
+    postAlert(transaction.description + " of " + formatCurrency(transferAmount) + " was successful.", 'success')
   } else {
     let newExternalTransferRequest = {
       user: appData.loggedInUser.details.userName,
@@ -894,6 +903,7 @@ function requestExternalTransfer() {
       amount: transferAmount
     }
     appData.users.admin.requests.incomingExternals.push(newExternalTransferRequest)
+    postAlert("Request to transfer in " + formatCurrency(transferAmount) + " from " + transferRoutingNumber + " " + transferAccountNumber + " sent for approval.", 'primary')
   }
 
   saveData()
@@ -1044,6 +1054,7 @@ function approveRequest(type, index) {
   }
   saveData()
   initRequests()
+  postAlert("Request approved.", 'success')
 }
 
 function declineRequest(type, index) {
@@ -1051,6 +1062,7 @@ function declineRequest(type, index) {
   appData.loggedInUser.requests[type].splice(index, 1)
   saveData()
   initRequests()
+  postAlert("Request declined.", 'dark')
 }
 
 function findUserAndAccountForAccountNumber(accountNumber) {
@@ -1085,4 +1097,48 @@ function formatCurrency(amount) {
     return "-$" + (-amountNum).toLocaleString('en-US', options);
   }
   return "$" + Number(amount).toLocaleString('en-US', options);
+}
+
+let alertList = []
+
+function postAlert(message, type) {
+  alertList.push({
+    message: message,
+    type: type,
+    time: Date.now(),
+    id: crypto.randomUUID()
+  })
+  updateAlerts()
+  setTimeout(updateAlerts, 5100)
+}
+
+function updateAlerts() {
+  let alertListNode = document.getElementById('alert-list')
+  alertListNode.replaceChildren()
+  let newAlertList = []
+  for (let alertObject of alertList) {
+    if (alertObject.time + 5000 > Date.now()) {
+      newAlertList.push(alertObject)
+      let listItem = document.getElementById("alert-item-template").content.firstElementChild.cloneNode(true)
+      
+      let messageContainer = listItem.querySelector('.alert-' + alertObject.type)
+      messageContainer.classList.remove('hidden')
+      messageContainer.querySelector('.message').innerText = alertObject.message
+      messageContainer.querySelector('.btn-close').onclick = () => removeAlert(alertObject.id)
+      
+      alertListNode.append(listItem)
+    }
+  }
+  alertList = newAlertList
+}
+
+function removeAlert(id) {
+  let newAlertList = []
+  for (let alertObject of alertList) {
+    if (alertObject.id != id) {
+      newAlertList.push(alertObject)
+    }
+  }
+  alertList = newAlertList
+  updateAlerts()
 }

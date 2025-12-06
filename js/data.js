@@ -155,7 +155,7 @@ let defaultData = {
 let appData = {}
 
 function initData() {
-  let storedAppDataString = localStorage.getItem("appData")
+  let storedAppDataString = localStorage.getItem("appDataBanking")
   if (storedAppDataString != null) {
     appData = JSON.parse(storedAppDataString)
   } else {
@@ -221,7 +221,7 @@ function saveData() {
   if (appData.loggedInUser) {
     appData.users[appData.loggedInUser.details.userName] = appData.loggedInUser
   }
-  localStorage.setItem("appData", JSON.stringify(appData))
+  localStorage.setItem("appDataBanking", JSON.stringify(appData))
 }
 
 function loginByKeyDown(event) {

@@ -833,6 +833,11 @@ function requestInternalTransfer() {
     user.requests.internalTranfers.push(newInternalTransferRequest)
     postAlert("Transfer of " + formatCurrency(amount) +  " from " + user.details.firstName + " " + user.details.lastName + "'s " +account.nickname + " sent for approval.", 'primary')
   } else {
+    if (sourceAccount.balance - amount < 0) {
+      postAlert("Insufficient funds to complete transfer.", 'dark')
+      return
+    }
+
     sourceAccount.balance -= amount
     destnationAccount.balance += amount
     
@@ -915,6 +920,11 @@ function requestExternalTransfer() {
   }
 
   if (transferDirection == 'outgoing') {
+    if (userAccount.balance - transferAmount < 0) {
+      postAlert("Insufficient funds to complete transfer.", 'dark')
+      return
+    }
+
     userAccount.balance -= transferAmount
 
     let transaction = {
@@ -1051,6 +1061,12 @@ function approveRequest(type, index) {
     appData.users[request.user].connections.push(newConnection)
   } else if (type == 'internalTranfers') {
     let {account: sourceAccount, user: sourceUser} = findUserAndAccountForAccountNumber(request.sourceAccountId)
+
+    if (sourceAccount.balance - request.amount < 0) {
+      postAlert("Insufficient funds to complete transfer.", 'dark')
+      return
+    }
+
     sourceAccount.balance -= request.amount
     let {account: destnationAccount, user: destinationUser} = findUserAndAccountForAccountNumber(request.destinationAccountId)
     destnationAccount.balance += request.amount

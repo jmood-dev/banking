@@ -996,7 +996,7 @@ function initRequests() {
     let listItem = document.getElementById("request-list-item-template").content.firstElementChild.cloneNode(true)
     listItem.querySelector(".request-user").innerHTML = "From: " + appData.users[request.user].details.firstName + " " + appData.users[request.user].details.lastName
     listItem.querySelector(".request-type").innerHTML = "Type: Link Account"
-    listItem.querySelector(".request-amount").classList.add("hidden")
+    listItem.querySelector(".request-amount").innerHTML = "Account to Link: " + findUserAndAccountForAccountNumber(request.accountId).account.nickname
     listItem.querySelector(".approve-request-button").onclick = () => {approveRequest('connections', i)}
     listItem.querySelector(".decline-request-button").onclick = () => {declineRequest('connections', i)}
     requestList.append(listItem)

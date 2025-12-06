@@ -70,7 +70,7 @@ let defaultData = {
       previousPasswords: ['admin'],
       accounts: [
         {
-          id: generateAccountNumber(),
+          id: generateAccountNumber(false),
           type: "Savings",
           nickname: "My Savings",
           balance: 0,
@@ -1065,11 +1065,13 @@ function findUserAndAccountForAccountNumber(accountNumber) {
   return
 }
 
-function generateAccountNumber() {
+function generateAccountNumber(checkForDuplicate=true) {
   let accountNumber = ""
-  for (let i = 0; i < 15; i++) {
-    accountNumber += Math.floor(Math.random()*10)
-  }
+  do {
+    for (let i = 0; i < 15; i++) {
+      accountNumber += Math.floor(Math.random()*10)
+    }
+  } while (checkForDuplicate && findUserAndAccountForAccountNumber(accountNumber) !== undefined);
   return accountNumber
 }
 

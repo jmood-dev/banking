@@ -859,20 +859,32 @@ function requestInternalTransfer() {
   updateRequestsBadge()
 }
 
+function checkCanRequestConnection() {
+  document.getElementById('internal-transfer-new-connection-request-button').disabled = document.getElementById('internal-transfer-new-connection-input').value == ''
+}
+
 function requestNewConnection() {
   let accountNumber = document.getElementById('internal-transfer-new-connection-input').value
-  let newConnectionRequest = {
-    user: appData.loggedInUser.details.userName,
-    accountId: accountNumber
+  
+  let user = findUserAndAccountForAccountNumber(accountNumber) ? findUserAndAccountForAccountNumber(accountNumber).user : null
+  if (!user) {
+    postAlert("No account found with number " + accountNumber, 'dark')
   }
-  let user = findUserAndAccountForAccountNumber(accountNumber).user
-  if (user) {
+  else if (user.details.userName == appData.loggedInUser.details.userName) {
+    postAlert("You cannot link to your own account.", 'dark')
+  } else if (appData.loggedInUser.connections.find( e => e.accountId == accountNumber )) {
+    postAlert("You are already connected to this account.", 'dark')
+  } else {
+    let newConnectionRequest = {
+      user: appData.loggedInUser.details.userName,
+      accountId: accountNumber
+    }
     user.requests.connections.push(newConnectionRequest)
+    saveData()
+    updateRequestsBadge()
+    postAlert("Request to connect to account with number " + accountNumber + " sent for approval.", 'primary')
   }
-  saveData()
   initTransferUI()
-  updateRequestsBadge()
-  postAlert("Request to connect to account with number " + accountNumber + " sent for approval.", 'primary')
 }
 
 function requestExternalTransfer() {
@@ -1109,7 +1121,7 @@ function postAlert(message, type) {
     id: crypto.randomUUID()
   })
   updateAlerts()
-  setTimeout(updateAlerts, 5100)
+  setTimeout(updateAlerts, 7100)
 }
 
 function updateAlerts() {
@@ -1117,7 +1129,7 @@ function updateAlerts() {
   alertListNode.replaceChildren()
   let newAlertList = []
   for (let alertObject of alertList) {
-    if (alertObject.time + 5000 > Date.now()) {
+    if (alertObject.time + 7000 > Date.now()) {
       newAlertList.push(alertObject)
       let listItem = document.getElementById("alert-item-template").content.firstElementChild.cloneNode(true)
       

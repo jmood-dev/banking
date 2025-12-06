@@ -125,9 +125,9 @@
               </div>
               <div class="internal-transfer-new-connection-div hidden">
                 <div class="form-floating">
-                  <input id="internal-transfer-new-connection-input" placeholder="Amount" type="text" class="form-control">
+                  <input id="internal-transfer-new-connection-input" placeholder="Amount" type="text" class="form-control" oninput="checkCanRequestConnection()">
                   <label for="internal-transfer-new-connection-input">Account Number</label>
-                  <button type="button" class="btn btn-warning mt-2" onclick="requestNewConnection()">Request Link</button>
+                  <button id="internal-transfer-new-connection-request-button" type="button" class="btn btn-warning mt-2" onclick="requestNewConnection()" disabled>Request Link</button>
                 </div>
               </div>
             </div>

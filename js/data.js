@@ -597,7 +597,7 @@ function updateNote() {
 }
 
 function checkCanOpenAccount() {
-  document.getElementById('open-account-button').disabled = document.getElementById('open-account-type').value == 'select'
+  document.getElementById('open-account-button').disabled = document.getElementById('open-account-type').value == 'select' || document.getElementById('open-account-name-input').value == ''
 }
 
 function openAccount() {

@@ -719,10 +719,16 @@ function updateTransferUI(event) {
 }
 
 function requestDeposit() {
+  let amount = document.querySelector('.deposit-amount-input').value
+  if (amount < 0.01) {
+    postAlert("You cannot deposit an amount less than $0.01", 'dark')
+    return
+  }
+
   let newDepositRequest = {
     user: appData.loggedInUser.details.userName,
     accountId: document.querySelector('.deposit-account-select').value,
-    amount: document.querySelector('.deposit-amount-input').value
+    amount: amount
   }
   document.querySelector('.deposit-amount-input').value = ''
   appData.users['admin'].requests.deposits.push(newDepositRequest)
@@ -799,6 +805,11 @@ function transferDestinationSelected() {
 
 function requestInternalTransfer() {
   let amount = Number(document.querySelector('.internal-transfer-amount-input').value)
+
+  if (amount < 0.01) {
+    postAlert("You cannot tranfer an amount less than $0.01", 'dark')
+    return
+  }
 
   let destnationAccountSelectValue = document.getElementById('transfer-destination-select').value
   let destnationAccount = appData.loggedInUser.accounts.find(e => e.id == destnationAccountSelectValue)
@@ -887,12 +898,21 @@ function requestNewConnection() {
   initTransferUI()
 }
 
+function checkCanRequestExternalTranfer() {
+  document.getElementById('external-transfer-request-button').disabled = document.getElementById('external-transfer-direction-select').value == '' || document.getElementById('external-transfer-routing-number-input').value == '' || document.getElementById('external-transfer-account-number-input').value == ''
+}
+
 function requestExternalTransfer() {
   let userAccount = appData.loggedInUser.accounts.find(e => e.id == document.getElementById('external-transfer-user-account-select').value)
   let transferDirection = document.getElementById('external-transfer-direction-select').value
   let transferRoutingNumber = document.getElementById('external-transfer-routing-number-input').value
   let transferAccountNumber = document.getElementById('external-transfer-account-number-input').value
   let transferAmount = document.getElementById('external-transfer-amount-input').value
+
+  if (transferAmount < 0.01) {
+    postAlert("You cannot transfer an amount less than $0.01", 'dark')
+    return
+  }
 
   if (transferDirection == 'outgoing') {
     userAccount.balance -= transferAmount

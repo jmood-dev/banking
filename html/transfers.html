@@ -100,7 +100,7 @@
               <div>
                 <select class="deposit-account-select form-select mb-2"></select>
               </div>
-              <input class="deposit-amount-input" placeholder="Amount" type="number" class="form-control">
+              <input class="deposit-amount-input" placeholder="Amount" type="number" min="0" step="0.01" class="form-control">
               <button type="button" class="btn btn-warning" onclick="requestDeposit()">Deposit Money</button>
             </div>
           </template>
@@ -120,7 +120,7 @@
                 <label for="transfer-destination-select">To</label>
               </div>
               <div class="internal-transfer-amount-div hidden">
-                <input class="internal-transfer-amount-input" placeholder="Amount" type="number" class="form-control">
+                <input class="internal-transfer-amount-input" placeholder="Amount" type="number" min="0" step="0.01" class="form-control">
                 <button type="button" class="btn btn-warning" onclick="requestInternalTransfer()">Transfer</button>
               </div>
               <div class="internal-transfer-new-connection-div hidden">
@@ -140,7 +140,7 @@
                 <label for="external-transfer-user-account-select">Your Account</label>
               </div>
               <div class="form-floating">
-                <select id="external-transfer-direction-select" class="transfer-direction-select form-select mb-2">
+                <select id="external-transfer-direction-select" class="transfer-direction-select form-select mb-2" onchange="checkCanRequestExternalTranfer()">
                   <option value=""></option>
                   <option value="incoming">Receive Money</option>
                   <option value="outgoing">Send Money</option>
@@ -148,16 +148,16 @@
                 <label for="external-transfer-direction-select">I want to</label>
               </div>
               <div class="form-floating">
-                <input id="external-transfer-routing-number-input" placeholder="Routing Number" type="text" class="form-control mb-2">
+                <input id="external-transfer-routing-number-input" placeholder="Routing Number" type="text" class="form-control mb-2" oninput="checkCanRequestExternalTranfer()">
                 <label for="external-transfer-routing-number-input">Routing Number</label>
               </div>
               <div class="form-floating">
-                <input id="external-transfer-account-number-input" placeholder="Account Number" type="text" class="form-control mb-2">
+                <input id="external-transfer-account-number-input" placeholder="Account Number" type="text" class="form-control mb-2" oninput="checkCanRequestExternalTranfer()">
                 <label for="external-transfer-account-number-input">Account Number</label>
               </div>
               <div class="external-transfer-amount-div">
-                <input id="external-transfer-amount-input" placeholder="Amount" type="number" class="mb-2 external-transfer-amount-input">
-                <button type="button" class="btn btn-warning" onclick="requestExternalTransfer()">Transfer</button>
+                <input id="external-transfer-amount-input" placeholder="Amount" type="number" min="0" step="0.01" class="mb-2 external-transfer-amount-input">
+                <button id="external-transfer-request-button" type="button" class="btn btn-warning" onclick="requestExternalTransfer()" disabled>Transfer</button>
               </div>
             </div>
           </template>
